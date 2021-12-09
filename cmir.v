@@ -71,7 +71,7 @@ fn C.MIR_new_forward(&C.MIR_context_t, &byte) &C.MIR_item_t
 // new func
 // fn C.MIR_new_func(&C.MIR_contxt_t, &byte, int, []&C.MIR_type_t, int) &C.MIR_item_t
 
-// finish func
+// function creation is finished, add endfunc
 fn C.MIR_finish_func(&C.MIR_context_t)
 
 // new string data

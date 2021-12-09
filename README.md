@@ -23,7 +23,7 @@ fn main() {
 	ctx.new_module('m')
 
 	ctx.output('./my_mir.mir') or { panic(err) }
-	ctx.free()
+	ctx.finish()
 	println('done')
 }
 

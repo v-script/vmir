@@ -21,12 +21,6 @@ pub fn (ctx &Context) finish() {
 	C.MIR_finish(ctx.c)
 }
 
-// free all: func,module,context
-pub fn (ctx &Context) free() {
-	ctx.finish_module()
-	ctx.finish()
-}
-
 // outputs MIR textual representation to file
 pub fn (ctx &Context) output(path string) ? {
 	file := os.create(path) or { panic(err) }
@@ -55,7 +49,7 @@ pub fn (ctx &Context) new_module(name string) &C.MIR_module_t {
 	return C.MIR_new_module(ctx.c, name.str)
 }
 
-// free module data
+// module creation is finished, add endmodule
 pub fn (ctx &Context) finish_module() {
 	C.MIR_finish_module(ctx.c)
 }
@@ -109,6 +103,7 @@ pub fn new_vararg_func() {
 pub fn new_func_reg() {
 }
 
+// function creation is finished, add endfunc
 pub fn (ctx &Context) finish_func() {
 	C.MIR_finish_func(ctx.c)
 }
