@@ -21,7 +21,7 @@ pub fn (ctx &Context) finish() {
 	C.MIR_finish(ctx.c)
 }
 
-// free all internal data,when finish
+// free all: func,module,context
 pub fn (ctx &Context) free() {
 	ctx.finish_module()
 	ctx.finish()

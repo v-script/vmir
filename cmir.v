@@ -1,9 +1,8 @@
 module vmir
 
-#flag -L /usr/local/lib
 #flag -lmir
-#flag -I /usr/local/include
 #include "mir.h"
+#include "mir-gen.h"
 
 // data types
 pub enum MIR_type {
