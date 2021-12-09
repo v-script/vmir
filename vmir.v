@@ -5,6 +5,7 @@ import os
 // context
 [heap]
 pub struct Context {
+pub:
 	c &C.MIR_context_t
 }
 
@@ -23,8 +24,12 @@ pub fn (ctx &Context) finish() {
 
 // outputs MIR textual representation to file
 pub fn (ctx &Context) output(path string) ? {
-	file := os.create(path) or { panic(err) }
-	C.MIR_output(ctx.c, file.fd)
+	if !os.exists(path) {
+		mut file := os.create(path) or { panic(err) }
+		file.close()
+	}
+	cfile := os.vfopen(path, 'wb') or { panic(err) }
+	C.MIR_output(ctx.c, cfile)
 }
 
 // reads textual MIR representation from string
@@ -34,14 +39,21 @@ pub fn (ctx &Context) scan_string(s string) {
 
 // outputs binary MIR representation to file
 pub fn (ctx &Context) write(path string) ? {
-	file := os.create(path) or { return err }
-	C.MIR_write(ctx.c, file.fd)
+	if !os.exists(path) {
+		mut file := os.create(path) or { panic(err) }
+		file.close()
+	}
+	cfile := os.vfopen(path, 'wb') or { panic(err) }
+	C.MIR_write(ctx.c, cfile)
 }
 
 // read binary MIR representation from file
 pub fn (ctx &Context) read(path string) ? {
-	file := os.open(path) or { return err }
-	C.MIR_read(ctx.c, file.fd)
+	if !os.exists(path) {
+		return error('file is not exists: $path')
+	}
+	cfile := os.vfopen(path, 'rb') or { panic(err) }
+	C.MIR_read(ctx.c, cfile)
 }
 
 // module
@@ -155,8 +167,10 @@ pub fn new_ldouble_op() {
 pub fn new_str_op() {
 }
 
-pub fn new_label() {
-}
+// new lable op
+// pub fn (ctx &Context) new_label(name string) &C.MIR_op_t {
+
+// }
 
 pub fn new_ref_op() {
 }

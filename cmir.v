@@ -16,6 +16,16 @@ pub struct C.MIR_str {
 	s   &byte
 }
 
+pub struct C.MIR_insn {
+	data voidptr
+	code int
+	nops int
+	
+
+}
+
+pub struct C.MIR_label_t {}
+
 // context
 pub struct C.MIR_context_t {}
 
@@ -76,3 +86,7 @@ fn C.MIR_finish_func(&C.MIR_context_t)
 
 // new string data
 fn C.MIR_new_string_data(&C.MIR_context_t, &byte, C.MIR_str) &C.MIR_item_t
+
+
+// new lable op
+fn C.MIR_new_label_op(&C.MIR_context_t, C.MIR_label_t) &C.MIR_op_t
