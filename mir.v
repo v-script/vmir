@@ -1,205 +1,221 @@
 module vmir
 
+import os
+
 // context
-fn init_context() {
+[heap]
+pub struct Context {
+	c &C.MIR_context_t
 }
 
-fn finist_context() {
+pub fn new_context() &Context {
+	c := C.MIR_init()
+	return &Context{
+		c: c
+	}
 }
 
-fn output() {
+pub fn (ctx &Context) finish() {
+	C.MIR_finish(ctx.c)
 }
 
-fn scan_string() {
+pub fn (ctx &Context) output(file os.File) {
+	C.MIR_output(ctx.c, file.fd)
 }
 
-fn write() {
+pub fn (ctx &Context) scan_string() string {
+	mut text := ''
+	C.MIR_scan_string(ctx.c,text.str)
+	return text
 }
 
-fn write_with_func() {
+pub fn write() {
 }
 
-fn read() {
+pub fn write_with_func() {
 }
 
-fn read_with_func() {
+pub fn read() {
+}
+
+pub fn read_with_func() {
 }
 
 // module
-fn new_module() {
+pub fn new_module() {
 }
 
-fn finish_module() {
+pub fn finish_module() {
 }
 
-fn get_module_list() {
+pub fn get_module_list() {
 }
 
-fn new_import() {
+pub fn new_import() {
 }
 
-fn new_export() {
+pub fn new_export() {
 }
 
-fn new_forword() {
+pub fn new_forword() {
 }
 
-fn new_proto_arr() {
+pub fn new_proto_arr() {
 }
 
-fn new_proto() {
+pub fn new_proto() {
 }
 
-fn new_vararg_proto_arr() {
+pub fn new_vararg_proto_arr() {
 }
 
-fn new_vararg_proto() {
+pub fn new_vararg_proto() {
 }
 
 // func
-fn new_func_arr() {
+pub fn new_func_arr() {
 }
 
-fn new_func() {
+pub fn new_func() {
 }
 
-fn new_vararg_func_arr() {
+pub fn new_vararg_func_arr() {
 }
 
-fn new_vararg_func() {
+pub fn new_vararg_func() {
 }
 
-fn new_func_reg() {
+pub fn new_func_reg() {
 }
 
-fn finish_func() {
+pub fn finish_func() {
 }
 
-fn new_data() {
+pub fn new_data() {
 }
 
-fn new_string_data() {
+pub fn new_string_data() {
 }
 
-fn new_ref_data() {
+pub fn new_ref_data() {
 }
 
-fn new_expr_data() {
+pub fn new_expr_data() {
 }
 
-fn new_bss() {
+pub fn new_bss() {
 }
 
-fn output_item() {
+pub fn output_item() {
 }
 
-fn output_module() {
+pub fn output_module() {
 }
 
 // operands
 
-fn new_int_op() {
+pub fn new_int_op() {
 }
 
-fn new_uint_op() {
+pub fn new_uint_op() {
 }
 
-fn new_float_op() {
+pub fn new_float_op() {
 }
 
-fn new_double_op() {
+pub fn new_double_op() {
 }
 
-fn new_ldouble_op() {
+pub fn new_ldouble_op() {
 }
 
-fn new_str_op() {
+pub fn new_str_op() {
 }
 
-fn new_label() {
+pub fn new_label() {
 }
 
-fn new_ref_op() {
+pub fn new_ref_op() {
 }
 
-fn new_reg_op() {
+pub fn new_reg_op() {
 }
 
-fn new_mem_op() {
+pub fn new_mem_op() {
 }
 
-fn output_op() {
+pub fn output_op() {
 }
 
 // insn
-fn new_insn() {
+pub fn new_insn() {
 }
 
-fn new_insn_arr() {
+pub fn new_insn_arr() {
 }
 
-fn new_call_insn() {
+pub fn new_call_insn() {
 }
 
-fn new_ret_insn() {
+pub fn new_ret_insn() {
 }
 
-fn prepend_insn() {
+pub fn prepend_insn() {
 }
 
-fn append_insn() {
+pub fn append_insn() {
 }
 
-fn insert_insn_after() {
+pub fn insert_insn_after() {
 }
 
-fn insert_insn_before() {
+pub fn insert_insn_before() {
 }
 
-fn remove_insn() {
+pub fn remove_insn() {
 }
 
-fn output_insn() {
+pub fn output_insn() {
 }
 
 // other api
-fn get_error_func() {
+pub fn get_error_func() {
 }
 
-fn set_error_func() {
+pub fn set_error_func() {
 }
 
-fn load_module() {
+pub fn load_module() {
 }
 
-fn load_external() {
+pub fn load_external() {
 }
 
-fn link() {
+pub fn link() {
 }
 
 // run with interpreter
-fn interp() {
+pub fn interp() {
 }
 
-fn set_interp_interface() {
+pub fn set_interp_interface() {
 }
 
 // generator
-fn gen_init() {
+pub fn gen_init() {
 }
 
-fn gen_finish() {
+pub fn gen_finish() {
 }
 
-fn gen() {
+pub fn gen() {
 }
 
-fn set_degug_file() {
+pub fn set_degug_file() {
 }
 
-fn gen_set_debug_level() {
+pub fn gen_set_debug_level() {
 }
 
-fn gen_set_optimize_level() {
+pub fn gen_set_optimize_level() {
 }
