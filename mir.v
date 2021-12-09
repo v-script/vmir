@@ -8,6 +8,7 @@ pub struct Context {
 	c &C.MIR_context_t
 }
 
+// init context
 pub fn new_context() &Context {
 	c := C.MIR_init()
 	return &Context{
@@ -15,50 +16,64 @@ pub fn new_context() &Context {
 	}
 }
 
+// free all internal data,when finish
 pub fn (ctx &Context) finish() {
 	C.MIR_finish(ctx.c)
 }
 
-pub fn (ctx &Context) output(file os.File) {
+// outputs MIR textual representation to file
+pub fn (ctx &Context) output(path string) ? {
+	file := os.create(path) or { return err }
 	C.MIR_output(ctx.c, file.fd)
 }
 
-pub fn (ctx &Context) scan_string() string {
-	mut text := ''
-	C.MIR_scan_string(ctx.c,text.str)
-	return text
+// reads textual MIR representation from string
+pub fn (ctx &Context) scan_string(s string) {
+	C.MIR_scan_string(ctx.c, s.str)
 }
 
-pub fn write() {
+// outputs binary MIR representation to file
+pub fn (ctx &Context) write(path string) ? {
+	file := os.create(path) or { return err }
+	C.MIR_write(ctx.c, file.fd)
 }
 
-pub fn write_with_func() {
-}
-
-pub fn read() {
-}
-
-pub fn read_with_func() {
+// read binary MIR representation from file
+pub fn (ctx &Context) read(path string) ? {
+	file := os.open(path) or { return err }
+	C.MIR_read(ctx.c, file.fd)
 }
 
 // module
-pub fn new_module() {
+pub fn (ctx &Context) new_module(name string) &C.MIR_module_t {
+	return C.MIR_new_module(ctx.c, name.str)
 }
 
-pub fn finish_module() {
+// free module data
+pub fn (ctx &Context) finish_module() {
+	C.MIR_finish_module(ctx.c)
 }
 
-pub fn get_module_list() {
+// list of all created modules can be gotten
+pub fn (ctx &Context) get_module_list() &C.DLIST_MIR_module_t {
+	return C.MIR_get_module_list(ctx.c)
 }
 
-pub fn new_import() {
+// new import item
+pub fn (ctx &Context) new_import(name string) &C.MIR_item_t {
+	return C.MIR_new_import(ctx.c, name.str)
 }
 
-pub fn new_export() {
+// new export item
+pub fn (ctx &Context) new_export(name string) &C.MIR_item_t {
+	return C.MIR_new_export(ctx.c, name.str)
 }
 
-pub fn new_forword() {
+// new forward item
+pub fn (ctx &Context) new_forward(name string) &C.MIR_item_t {
+	return C.MIR_new_forward(ctx.c, name.str)
 }
+
 
 pub fn new_proto_arr() {
 }
