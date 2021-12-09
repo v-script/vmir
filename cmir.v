@@ -1,18 +1,28 @@
 module vmir
 
+#flag -L /usr/local/lib
 #flag -lmir
-// #flag -I ./mir
+#flag -I /usr/local/include
 #include "mir.h"
 
 // data types
-// pub enum MIR_type_t {
-// 	MIR_T_I8
-// 	MIR_T_U8
+pub enum MIR_type {
+	mir_t_i8
+	mir_t_u8
+	mir_t_i16
+}
 
-// }
+pub struct C.MIR_str {
+	len int
+	s   &byte
+}
 
 // context
 pub struct C.MIR_context_t {}
+
+// module
+pub struct C.MIR_module_t {}
+
 
 // init context
 fn C.MIR_init() &C.MIR_context_t
@@ -38,9 +48,6 @@ fn C.MIR_write_with_func()
 // TODO:read binary MIR representation  through a function given as an argument
 fn C.MIR_read_with_func()
 
-// module
-pub struct C.MIR_module_t {}
-
 // new module
 fn C.MIR_new_module(&C.MIR_context_t, &byte) &C.MIR_module_t
 
@@ -53,8 +60,20 @@ fn C.MIR_get_module_list(&C.MIR_context_t) &C.DLIST_MIR_module_t
 // new import item
 fn C.MIR_new_import(&C.MIR_context_t, &byte) &C.MIR_item_t
 
-//new export item
+// new export item
 fn C.MIR_new_export(&C.MIR_context_t, &byte) &C.MIR_item_t
 
-//new forward item
+// new forward item
 fn C.MIR_new_forward(&C.MIR_context_t, &byte) &C.MIR_item_t
+
+// new prototype
+// fn C.MIR_new_proto(&C.MIR_contxt_t, &byte, int, []&C.MIR_type_t, int) &C.MIR_item_t
+
+// new func
+// fn C.MIR_new_func(&C.MIR_contxt_t, &byte, int, []&C.MIR_type_t, int) &C.MIR_item_t
+
+// finish func
+fn C.MIR_finish_func(&C.MIR_context_t)
+
+// new string data
+fn C.MIR_new_string_data(&C.MIR_context_t, &byte, C.MIR_str) &C.MIR_item_t

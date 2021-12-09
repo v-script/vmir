@@ -18,12 +18,13 @@ pub fn new_context() &Context {
 
 // free all internal data,when finish
 pub fn (ctx &Context) finish() {
+	ctx.finish_module()
 	C.MIR_finish(ctx.c)
 }
 
 // outputs MIR textual representation to file
 pub fn (ctx &Context) output(path string) ? {
-	file := os.create(path) or { return err }
+	file := os.create(path) or { panic(err) }
 	C.MIR_output(ctx.c, file.fd)
 }
 
@@ -74,11 +75,11 @@ pub fn (ctx &Context) new_forward(name string) &C.MIR_item_t {
 	return C.MIR_new_forward(ctx.c, name.str)
 }
 
+// new prototype
+// pub fn (ctx &Context) new_proto(name string, nres int, res_types []&C.MIR_type_t, nargs int, args ...string) {
+// }
 
 pub fn new_proto_arr() {
-}
-
-pub fn new_proto() {
 }
 
 pub fn new_vararg_proto_arr() {
@@ -103,13 +104,20 @@ pub fn new_vararg_func() {
 pub fn new_func_reg() {
 }
 
-pub fn finish_func() {
+pub fn (ctx &Context) finish_func() {
+	C.MIR_finish_func(ctx.c)
 }
 
 pub fn new_data() {
 }
 
-pub fn new_string_data() {
+// new string data
+pub fn (ctx &Context) new_string_data(name string, text string) &C.MIR_item_t {
+	mir_str := C.MIR_str{
+		len: text.len
+		s: text.str
+	}
+	return C.MIR_new_string_data(ctx.c, name.str, mir_str)
 }
 
 pub fn new_ref_data() {
