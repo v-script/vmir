@@ -21,8 +21,9 @@ import vmir
 fn main() {
 	ctx := vmir.new_context()
 	ctx.new_module('m')
-
-	ctx.output('./my_mir.mir') or { panic(err) }
+	//...
+	
+	ctx.finish_module()
 	ctx.finish()
 	println('done')
 }
