@@ -18,8 +18,13 @@ pub fn new_context() &Context {
 
 // free all internal data,when finish
 pub fn (ctx &Context) finish() {
-	ctx.finish_module()
 	C.MIR_finish(ctx.c)
+}
+
+// free all internal data,when finish
+pub fn (ctx &Context) free() {
+	ctx.finish_module()
+	ctx.finish()
 }
 
 // outputs MIR textual representation to file
