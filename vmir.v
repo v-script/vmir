@@ -50,7 +50,7 @@ pub fn (ctx &Context) write(path string) ? {
 // read binary MIR representation from file
 pub fn (ctx &Context) read(path string) ? {
 	if !os.exists(path) {
-		return error('file is not exists: $path')
+		return error('file does not exists: $path')
 	}
 	cfile := os.vfopen(path, 'rb') or { panic(err) }
 	C.MIR_read(ctx.c, cfile)
