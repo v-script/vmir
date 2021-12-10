@@ -22,31 +22,24 @@ pub enum Type {
 	mir_bound
 }
 
+[heap]
+pub type Context = C.MIR_context_t
+
 pub type Module = C.MIR_module_t
 
 pub type Item = C.MIR_item_t
 
 pub type Var = C.MIR_var
 
-
-// context
-[heap]
-pub struct Context {
-pub:
-	c &C.MIR_context_t
-}
-
 // init context
 pub fn new_context() &Context {
 	c := C.MIR_init()
-	return &Context{
-		c: c
-	}
+	return c
 }
 
 // free all internal data,when finish
 pub fn (ctx &Context) finish() {
-	C.MIR_finish(ctx.c)
+	C.MIR_finish(ctx)
 }
 
 // outputs MIR textual representation to file
@@ -56,12 +49,12 @@ pub fn (ctx &Context) output(path string) ? {
 		file.close()
 	}
 	cfile := os.vfopen(path, 'wb') or { panic(err) }
-	C.MIR_output(ctx.c, cfile)
+	C.MIR_output(ctx, cfile)
 }
 
 // reads textual MIR representation from string
 pub fn (ctx &Context) scan_string(s string) {
-	C.MIR_scan_string(ctx.c, s.str)
+	C.MIR_scan_string(ctx, s.str)
 }
 
 // outputs binary MIR representation to file
@@ -71,7 +64,7 @@ pub fn (ctx &Context) write(path string) ? {
 		file.close()
 	}
 	cfile := os.vfopen(path, 'wb') or { panic(err) }
-	C.MIR_write(ctx.c, cfile)
+	C.MIR_write(ctx, cfile)
 }
 
 // read binary MIR representation from file
@@ -80,37 +73,37 @@ pub fn (ctx &Context) read(path string) ? {
 		return error('file does not exists: $path')
 	}
 	cfile := os.vfopen(path, 'rb') or { panic(err) }
-	C.MIR_read(ctx.c, cfile)
+	C.MIR_read(ctx, cfile)
 }
 
 // module
 pub fn (ctx &Context) new_module(name string) &Module {
-	return C.MIR_new_module(ctx.c, name.str)
+	return C.MIR_new_module(ctx, name.str)
 }
 
 // module creation is finished, add endmodule
 pub fn (ctx &Context) finish_module() {
-	C.MIR_finish_module(ctx.c)
+	C.MIR_finish_module(ctx)
 }
 
 // list of all created modules can be gotten
 pub fn (ctx &Context) get_module_list() &C.DLIST_MIR_module_t {
-	return C.MIR_get_module_list(ctx.c)
+	return C.MIR_get_module_list(ctx)
 }
 
 // new import item
 pub fn (ctx &Context) new_import(name string) &Item {
-	return C.MIR_new_import(ctx.c, name.str)
+	return C.MIR_new_import(ctx, name.str)
 }
 
 // new export item
 pub fn (ctx &Context) new_export(name string) &Item {
-	return C.MIR_new_export(ctx.c, name.str)
+	return C.MIR_new_export(ctx, name.str)
 }
 
 // new forward item
 pub fn (ctx &Context) new_forward(name string) &Item {
-	return C.MIR_new_forward(ctx.c, name.str)
+	return C.MIR_new_forward(ctx, name.str)
 }
 
 // new prototype
@@ -141,12 +134,12 @@ pub fn new_vararg_func() {
 
 // new func
 pub fn (ctx &Context) new_func(name string, res []Type, args []Var) &Item {
-	return C.MIR_new_func_arr(ctx.c, name.str, res.len, res.data, args.len, args.data)
+	return C.MIR_new_func_arr(ctx, name.str, res.len, res.data, args.len, args.data)
 }
 
 // function creation is finished, add endfunc
 pub fn (ctx &Context) finish_func() {
-	C.MIR_finish_func(ctx.c)
+	C.MIR_finish_func(ctx)
 }
 
 pub fn new_data() {
@@ -158,7 +151,7 @@ pub fn (ctx &Context) new_string_data(name string, text string) &Item {
 		len: text.len
 		s: text.str
 	}
-	return C.MIR_new_string_data(ctx.c, name.str, mir_str)
+	return C.MIR_new_string_data(ctx, name.str, mir_str)
 }
 
 pub fn new_ref_data() {
