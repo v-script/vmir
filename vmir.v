@@ -2,6 +2,33 @@ module vmir
 
 import os
 
+// data types, the same of MIR_type_t
+pub enum Type {
+	mir_i8
+	mir_u8
+	mir_i16
+	mir_u16
+	mir_i32
+	mir_u32
+	mir_i64
+	mir_u64
+	mir_f
+	mir_d
+	mir_ld
+	mir_p
+	mir_blk
+	mir_rblk
+	mir_undef
+	mir_bound
+}
+
+pub type Module = C.MIR_module_t
+
+pub type Item = C.MIR_item_t
+
+pub type Var = C.MIR_var
+
+
 // context
 [heap]
 pub struct Context {
@@ -57,7 +84,7 @@ pub fn (ctx &Context) read(path string) ? {
 }
 
 // module
-pub fn (ctx &Context) new_module(name string) &C.MIR_module_t {
+pub fn (ctx &Context) new_module(name string) &Module {
 	return C.MIR_new_module(ctx.c, name.str)
 }
 
@@ -72,17 +99,17 @@ pub fn (ctx &Context) get_module_list() &C.DLIST_MIR_module_t {
 }
 
 // new import item
-pub fn (ctx &Context) new_import(name string) &C.MIR_item_t {
+pub fn (ctx &Context) new_import(name string) &Item {
 	return C.MIR_new_import(ctx.c, name.str)
 }
 
 // new export item
-pub fn (ctx &Context) new_export(name string) &C.MIR_item_t {
+pub fn (ctx &Context) new_export(name string) &Item {
 	return C.MIR_new_export(ctx.c, name.str)
 }
 
 // new forward item
-pub fn (ctx &Context) new_forward(name string) &C.MIR_item_t {
+pub fn (ctx &Context) new_forward(name string) &Item {
 	return C.MIR_new_forward(ctx.c, name.str)
 }
 
@@ -112,7 +139,9 @@ pub fn new_vararg_func_arr() {
 pub fn new_vararg_func() {
 }
 
-pub fn new_func_reg() {
+// new func
+pub fn (ctx &Context) new_func(name string, res []Type, args []Var) &Item {
+	return C.MIR_new_func_arr(ctx.c, name.str, res.len, res.data, args.len, args.data)
 }
 
 // function creation is finished, add endfunc
@@ -124,7 +153,7 @@ pub fn new_data() {
 }
 
 // new string data
-pub fn (ctx &Context) new_string_data(name string, text string) &C.MIR_item_t {
+pub fn (ctx &Context) new_string_data(name string, text string) &Item {
 	mir_str := C.MIR_str{
 		len: text.len
 		s: text.str

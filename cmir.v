@@ -4,11 +4,10 @@ module vmir
 #include "mir.h"
 #include "mir-gen.h"
 
-// data types
-pub enum MIR_type {
-	mir_t_i8
-	mir_t_u8
-	mir_t_i16
+pub struct C.MIR_var {
+	@type Type
+	name  &byte
+	size  int
 }
 
 pub struct C.MIR_str {
@@ -20,11 +19,7 @@ pub struct C.MIR_insn {
 	data voidptr
 	code int
 	nops int
-	
-
 }
-
-pub struct C.MIR_label_t {}
 
 // context
 pub struct C.MIR_context_t {}
@@ -32,6 +27,11 @@ pub struct C.MIR_context_t {}
 // module
 pub struct C.MIR_module_t {}
 
+// module item
+pub struct C.MIR_item_t {}
+
+// module label
+pub struct C.MIR_label_t {}
 
 // init context
 fn C.MIR_init() &C.MIR_context_t
@@ -78,15 +78,14 @@ fn C.MIR_new_forward(&C.MIR_context_t, &byte) &C.MIR_item_t
 // new prototype
 // fn C.MIR_new_proto(&C.MIR_contxt_t, &byte, int, []&C.MIR_type_t, int) &C.MIR_item_t
 
-// new func
-// fn C.MIR_new_func(&C.MIR_contxt_t, &byte, int, []&C.MIR_type_t, int) &C.MIR_item_t
+// new func arr
+fn C.MIR_new_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) &C.MIR_item_t
 
 // function creation is finished, add endfunc
 fn C.MIR_finish_func(&C.MIR_context_t)
 
 // new string data
 fn C.MIR_new_string_data(&C.MIR_context_t, &byte, C.MIR_str) &C.MIR_item_t
-
 
 // new lable op
 fn C.MIR_new_label_op(&C.MIR_context_t, C.MIR_label_t) &C.MIR_op_t
