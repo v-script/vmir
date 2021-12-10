@@ -34,6 +34,8 @@ pub type Insn = C.MIR_insn_t
 
 pub type Op = C.MIR_op_t
 
+pub type Label = C.MIR_label_t
+
 // init context
 pub fn new_context() &Context {
 	c := C.MIR_init()
@@ -73,14 +75,14 @@ pub fn (c &Context) write(path string) ? {
 // read binary MIR representation from file
 pub fn (c &Context) read(path string) ? {
 	if !os.exists(path) {
-		return error('file does not exists: $path')
+		return error('file does not exist: $path')
 	}
 	cfile := os.vfopen(path, 'rb') or { panic(err) }
 	C.MIR_read(c, cfile)
 }
 
 // module
-pub fn (c &Context) new_module(name string) &Module {
+pub fn (c &Context) new_module(name string) Module {
 	return C.MIR_new_module(c, name.str)
 }
 
@@ -95,22 +97,22 @@ pub fn (c &Context) get_module_list() &C.DLIST_MIR_module_t {
 }
 
 // new import item
-pub fn (c &Context) new_import(name string) &Item {
+pub fn (c &Context) new_import(name string) Item {
 	return C.MIR_new_import(c, name.str)
 }
 
 // new export item
-pub fn (c &Context) new_export(name string) &Item {
+pub fn (c &Context) new_export(name string) Item {
 	return C.MIR_new_export(c, name.str)
 }
 
 // new forward item
-pub fn (c &Context) new_forward(name string) &Item {
+pub fn (c &Context) new_forward(name string) Item {
 	return C.MIR_new_forward(c, name.str)
 }
 
 // new prototype
-pub fn (c &Context) new_proto(name string, rets []Type, args []Var) &Item {
+pub fn (c &Context) new_proto(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_proto_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
@@ -127,7 +129,7 @@ pub fn new_vararg_func() {
 }
 
 // new func
-pub fn (c &Context) new_func(name string, rets []Type, args []Var) &Item {
+pub fn (c &Context) new_func(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_func_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
@@ -136,11 +138,16 @@ pub fn (c &Context) finish_func() {
 	C.MIR_finish_func(c)
 }
 
+// new label
+pub fn (c &Context) new_label() Insn {
+	return C.MIR_new_label(c)
+}
+
 pub fn new_data() {
 }
 
 // new string data
-pub fn (c &Context) new_string_data(name string, text string) &Item {
+pub fn (c &Context) new_string_data(name string, text string) Item {
 	mir_str := C.MIR_str{
 		len: text.len
 		s: text.str
@@ -184,12 +191,17 @@ pub fn (c &Context) new_ldouble_op(d f64) Op {
 	return C.MIR_new_ldouble_op(c, d)
 }
 
-pub fn new_str_op() {
+pub fn (c &Context) new_str_op(s string) Op {
+	mir_str := C.MIR_str{
+		len: s.len
+		s: s.str
+	}
+	return C.MIR_new_str_op(c, mir_str)
 }
 
-// new lable op
-// pub fn (c &Context) new_label(name string) &C.MIR_op_t {
-
+// pub fn (c &Context) new_label_op() Op {
+// 	label := c.new_label()
+// 	return  C.MIR_new_label_op(c, C.MIR_label_t(label))
 // }
 
 pub fn new_ref_op() {
@@ -205,19 +217,19 @@ pub fn output_op() {
 }
 
 // insn
-pub fn new_insn() {
+pub fn (c &Context) new_insn(code Insn_code, ops []Op) Insn {
+	return C.MIR_new_insn_arr(c, code, ops.len, ops.data)
 }
 
-pub fn new_insn_arr() {
-}
-
-pub fn new_call_insn() {
+// call insn
+pub fn (c &Context) new_call_insn(args ...Op) Insn {
+	return c.new_insn(Insn_code.call, args)
 }
 
 // return insn
-// pub fn (c &Context) new_ret_insn(args ...string) &Insn {
-// 	return C.MIR_new_ret_insn(c, nops, args)
-// }
+pub fn (c &Context) new_ret_insn(args ...Op) Insn {
+	return c.new_insn(Insn_code.ret, args)
+}
 
 pub fn prepend_insn() {
 }
