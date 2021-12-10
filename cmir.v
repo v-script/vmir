@@ -21,6 +21,13 @@ pub struct C.MIR_insn {
 	nops int
 }
 
+// insn
+pub struct C.MIR_insn_t {}
+
+// op
+[typedef]
+pub struct C.MIR_op_t {}
+
 // context
 pub struct C.MIR_context_t {}
 
@@ -34,58 +41,68 @@ pub struct C.MIR_item_t {}
 pub struct C.MIR_label_t {}
 
 // init context
-fn C.MIR_init() &C.MIR_context_t
+pub fn C.MIR_init() &C.MIR_context_t
 
 // free all internal data,when finish
-fn C.MIR_finish(&C.MIR_context_t)
+pub fn C.MIR_finish(&C.MIR_context_t)
 
 // outputs MIR textual representation to file
-fn C.MIR_output(&C.MIR_context_t, &C.FILE)
+pub fn C.MIR_output(&C.MIR_context_t, &C.FILE)
 
 // reads textual MIR representation from string
-fn C.MIR_scan_string(&C.MIR_context_t, &byte)
+pub fn C.MIR_scan_string(&C.MIR_context_t, &byte)
 
 // outputs binary MIR representation to file
-fn C.MIR_write(&C.MIR_context_t, &C.FILE)
+pub fn C.MIR_write(&C.MIR_context_t, &C.FILE)
 
 // read binary MIR representation from file
-fn C.MIR_read(&C.MIR_context_t, &C.FILE)
+pub fn C.MIR_read(&C.MIR_context_t, &C.FILE)
 
 // TODO:write binary MIR representation through a function given as an argument
-fn C.MIR_write_with_func()
+pub fn C.MIR_write_with_func()
 
 // TODO:read binary MIR representation  through a function given as an argument
-fn C.MIR_read_with_func()
+pub fn C.MIR_read_with_func()
 
 // new module
-fn C.MIR_new_module(&C.MIR_context_t, &byte) &C.MIR_module_t
+pub fn C.MIR_new_module(&C.MIR_context_t, &byte) &C.MIR_module_t
 
 // free module data
-fn C.MIR_finish_module(&C.MIR_context_t)
+pub fn C.MIR_finish_module(&C.MIR_context_t)
 
 // list of all created modules can be gotten
-fn C.MIR_get_module_list(&C.MIR_context_t) &C.DLIST_MIR_module_t
+pub fn C.MIR_get_module_list(&C.MIR_context_t) &C.DLIST_MIR_module_t
 
 // new import item
-fn C.MIR_new_import(&C.MIR_context_t, &byte) &C.MIR_item_t
+pub fn C.MIR_new_import(&C.MIR_context_t, &byte) &C.MIR_item_t
 
 // new export item
-fn C.MIR_new_export(&C.MIR_context_t, &byte) &C.MIR_item_t
+pub fn C.MIR_new_export(&C.MIR_context_t, &byte) &C.MIR_item_t
 
 // new forward item
-fn C.MIR_new_forward(&C.MIR_context_t, &byte) &C.MIR_item_t
+pub fn C.MIR_new_forward(&C.MIR_context_t, &byte) &C.MIR_item_t
 
 // new prototype
-// fn C.MIR_new_proto(&C.MIR_contxt_t, &byte, int, []&C.MIR_type_t, int) &C.MIR_item_t
+pub fn C.MIR_new_proto_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) &C.MIR_item_t
 
 // new func arr
-fn C.MIR_new_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) &C.MIR_item_t
+pub fn C.MIR_new_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) &C.MIR_item_t
 
 // function creation is finished, add endfunc
-fn C.MIR_finish_func(&C.MIR_context_t)
+pub fn C.MIR_finish_func(&C.MIR_context_t)
 
 // new string data
-fn C.MIR_new_string_data(&C.MIR_context_t, &byte, C.MIR_str) &C.MIR_item_t
+pub fn C.MIR_new_string_data(&C.MIR_context_t, &byte, C.MIR_str) &C.MIR_item_t
 
 // new lable op
-fn C.MIR_new_label_op(&C.MIR_context_t, C.MIR_label_t) &C.MIR_op_t
+pub fn C.MIR_new_label_op(&C.MIR_context_t, C.MIR_label_t) &C.MIR_op_t
+
+// return insn
+pub fn C.MIR_new_ret_insn(&C.MIR_context_t, int, va_list) &C.MIR_insn_t
+
+// op
+pub fn C.MIR_new_int_op(&C.MIR_context_t, i64) C.MIR_op_t
+pub fn C.MIR_new_uint_op(&C.MIR_context_t, u64) C.MIR_op_t
+pub fn C.MIR_new_float_op(&C.MIR_context_t, f32) C.MIR_op_t
+pub fn C.MIR_new_double_op(&C.MIR_context_t, f64) C.MIR_op_t
+pub fn C.MIR_new_ldouble_op(&C.MIR_context_t, f64) C.MIR_op_t
