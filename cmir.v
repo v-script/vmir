@@ -14,21 +14,49 @@ pub struct C.MIR_module_t {}
 
 // module item
 [typedef]
-pub struct C.MIR_item_t {}
+pub struct C.MIR_item_t {
+pub mut:
+	u Un
+}
+
+pub union Un {
+pub mut:
+	func       C.MIR_func_t
+	proto      C.MIR_proto_t
+	import_id  C.MIR_name_t
+	export_id  C.MIR_name_t
+	forward_id C.MIR_name_t
+	data       C.MIR_data_t
+	ref_data   C.MIR_ref_data_t
+	expr_data  C.MIR_expr_data_t
+	bss        C.MIR_bss_t
+}
+
+pub struct C.MIR_item {}
 
 // func
 [typedef]
 pub struct C.MIR_func_t {}
 
+pub struct C.MIR_proto {}
+
+[typedef]
+pub struct C.MIR_proto_t {}
+
 // module label
 [typedef]
 pub struct C.MIR_label_t {}
 
-pub struct C.MIR_var {
+[typedef]
+pub struct C.MIR_name_t {}
+
+pub struct C.MIR_var_t {
 	@type Type
 	name  &byte
 	size  int
 }
+[typedef]
+pub struct C.MIR_var {}
 
 pub struct C.MIR_str {
 	len int
@@ -43,6 +71,21 @@ pub struct C.MIR_insn {
 	code int
 	nops int
 }
+pub struct C.MIR_data {}
+[typedef]
+pub struct C.MIR_data_t {}
+
+pub struct C.MIR_ref_data {}
+[typedef]
+pub struct C.MIR_ref_data_t {}
+
+pub struct C.MIR_expr_data {}
+[typedef]
+pub struct C.MIR_expr_data_t {}
+
+pub struct C.MIR_bss {}
+[typedef]
+pub struct C.MIR_bss_t {}
 
 // insn
 [typedef]
@@ -62,7 +105,16 @@ pub struct C.MIR_disp_t {}
 pub struct C.MIR_scale_t {}
 
 [typedef]
-pub struct C.MIR_val_t {}
+pub union C.MIR_val_t {
+pub mut:
+	ic Insn_code
+	a  voidptr
+	i  i64
+	u  u64
+	f  f32
+	d  f64
+	ld f64
+}
 
 //------------------------------------------------------------------------------------------------
 // init context
@@ -116,6 +168,9 @@ pub fn C.MIR_new_vararg_proto_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, i
 pub fn C.MIR_new_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) C.MIR_item_t
 
 pub fn C.MIR_new_vararg_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) C.MIR_item_t
+
+// new func local variable(reg)
+pub fn C.MIR_new_func_reg(&C.MIR_context_t, &C.MIR_func_t, Type, &byte) C.MIR_reg_t
 
 // function creation is finished, add endfunc
 pub fn C.MIR_finish_func(&C.MIR_context_t)

@@ -30,9 +30,21 @@ pub type Item = C.MIR_item_t
 
 pub type Func = C.MIR_func_t
 
-pub type Var = C.MIR_var
+pub type Proto = C.MIR_proto_t
+
+pub type Var = C.MIR_var_t
 
 pub type Val = C.MIR_val_t
+
+pub type Name = C.MIR_name_t
+
+pub type Data = C.MIR_data_t
+
+pub type Ref = C.MIR_ref_data_t
+
+pub type Expr = C.MIR_expr_data_t
+
+pub type Bss = C.MIR_bss_t
 
 pub type Insn = C.MIR_insn_t
 
@@ -134,6 +146,14 @@ pub fn (c &Context) new_vararg_func(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_vararg_func_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
+// new func local variable(reg)
+pub fn (c &Context) new_func_reg(func Item, typ Type, name string) Reg {
+	unsafe {
+		f := func.u.func
+		return C.MIR_new_func_reg(c, f, typ, name.str)
+	}
+}
+
 // function creation is finished, add endfunc
 pub fn (c &Context) finish_func() {
 	C.MIR_finish_func(c)
@@ -216,6 +236,7 @@ pub fn (c &Context) new_str_op(s string) Op {
 	return C.MIR_new_str_op(c, mir_str)
 }
 
+// TODO:
 // pub fn (c &Context) new_label_op() Op {
 // 	label := c.new_label()
 // 	return  C.MIR_new_label_op(c, C.MIR_label_t(label))
@@ -312,6 +333,7 @@ pub fn (c &Context) load_external(name string, addr voidptr) {
 	C.MIR_load_external(c, name.str, addr)
 }
 
+// TODO:
 pub fn link() {
 }
 
@@ -322,7 +344,8 @@ pub fn (c &Context) interp(func_item Item, results []Val, vals []Val) {
 	C.MIR_interp_arr(c, func_item, results.data, vals.len, vals.data)
 }
 
-// setup the C function interface
+// setup the C function interface,execute a MIR function code also through C function call,
+// you can func_item->addr to call the MIR function as usual C function
 pub fn (c &Context) set_interp_interface(func_item Item) {
 	C.MIR_set_interp_interface(c, func_item)
 }
