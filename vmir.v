@@ -158,10 +158,16 @@ pub fn new_expr_data() {
 pub fn new_bss() {
 }
 
-pub fn output_item() {
+// output item
+pub fn (c &Context) output_item(path string, item Item) {
+	cfile := open_or_create_file(path)
+	C.MIR_output_item(c, cfile, item)
 }
 
-pub fn output_module() {
+// output module
+pub fn (c &Context) output_module(path string, mod Module) {
+	cfile := open_or_create_file(path)
+	C.MIR_output_module(c, cfile, mod)
 }
 
 // operands
@@ -207,7 +213,10 @@ pub fn new_reg_op() {
 pub fn new_mem_op() {
 }
 
-pub fn output_op() {
+// output op
+pub fn (c &Context) output_op(path string, op Op, func Func) {
+	cfile := open_or_create_file(path)
+	C.MIR_output_op(c, cfile, op, func)
 }
 
 // insn
@@ -297,21 +306,4 @@ pub fn gen_set_debug_level() {
 }
 
 pub fn gen_set_optimize_level() {
-}
-
-pub fn open_or_create_file(path string) &C.FILE {
-	if !os.exists(path) {
-		mut file := os.create(path) or { panic(err) }
-		file.close()
-	}
-	cfile := os.vfopen(path, 'wb') or { panic(err) }
-	return cfile
-}
-
-pub fn get_file(path string) ?&C.FILE {
-	if !os.exists(path) {
-		return error('file does not exist: $path')
-	}
-	cfile := os.vfopen(path, 'rb') or { panic(err) }
-	return cfile
 }

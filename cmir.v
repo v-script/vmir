@@ -103,6 +103,12 @@ pub fn C.MIR_finish_func(&C.MIR_context_t)
 // new string data
 pub fn C.MIR_new_string_data(&C.MIR_context_t, &byte, C.MIR_str) C.MIR_item_t
 
+// output item
+pub fn C.MIR_output_item(&C.MIR_context_t, &C.FILE, &C.MIR_item_t)
+
+// output module
+pub fn C.MIR_output_module(&C.MIR_context_t, &C.FILE, &C.MIR_module_t)
+
 // new insn with op array
 pub fn C.MIR_new_insn_arr(&C.MIR_context_t, Insn_code, int, &C.MIR_op_t) C.MIR_insn_t
 
@@ -141,3 +147,6 @@ pub fn C.MIR_new_str_op(&C.MIR_context_t, C.MIR_str) C.MIR_op_t
 
 // new lable op
 pub fn C.MIR_new_label_op(&C.MIR_context_t, C.MIR_label_t) C.MIR_op_t
+
+// output op
+pub fn C.MIR_output_op(&C.MIR_context_t, &C.FILE, &C.MIR_op_t, &C.MIR_func_t)
