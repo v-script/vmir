@@ -103,6 +103,8 @@ pub struct C.MIR_insn_t {}
 [typedef]
 pub struct C.MIR_op_t {}
 
+// pub struct C.MIR_reg {}
+
 [typedef]
 pub struct C.MIR_reg_t {}
 
@@ -230,6 +232,9 @@ pub fn C.MIR_output_insn(&C.MIR_context_t, &C.FILE, &C.MIR_insn_t, &C.MIR_func_t
 
 // new label
 pub fn C.MIR_new_label(&C.MIR_context_t) C.MIR_insn_t
+
+// get func arg
+pub fn C.MIR_reg(&C.MIR_context_t, &byte, &C.MIR_func_t) C.MIR_reg_t
 
 //------------------------------------------------------------------------------------------------
 // op

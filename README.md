@@ -19,18 +19,29 @@ module main
 import vmir
 
 fn main() {
-	ctx := vmir.new_context()
-	ctx.new_module('m')
-	ctx.new_import('printf')
-	ctx.new_export('m')
-	ctx.new_forward('myforwoard')
-	ctx.new_string_data('out', 'hello world\n')
-	ctx.finish_module()
-	ctx.output('./m.mir') or { panic(err) }
-	ctx.write('./m.bmir') or { panic(err) }
-	ctx.finish()
+	c := vmir.new_context()
+	c.new_module('m')
+	mut rets := []Type{}
+	rets << .mir_i64
+	mut vars := []Var{}
+	vars << Var{
+		@type: .mir_i64
+		name: 'i'.str
+	}
+	main_fn := c.new_func('main', rets, vars)
+	c.new_func_reg(main_fn, .mir_i64, 'ii')
+	c.new_func_reg(main_fn, .mir_f, 'ff')
+
+	c.new_forward('myforwoard')
+	c.new_string_data('out', 'hello world\n')
+	c.finish_func()
+	c.finish_module()
+	c.output('./m.mir') or { panic(err) }
+	c.write('./m.bmir') or { panic(err) }
+	c.finish()
 	println('done')
 }
+
 
 ```
 

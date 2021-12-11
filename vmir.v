@@ -152,6 +152,12 @@ pub fn (c &Context) new_func_reg(func Item, typ Type, name string) Reg {
 	return C.MIR_new_func_reg(c, f, typ, name.str)
 }
 
+// get func arg(reg)
+pub fn (c &Context) reg(name string, func Item) Reg {
+	f := C.get_item_func(func)
+	return C.MIR_reg(c, name.str, f)
+}
+
 // function creation is finished, add endfunc
 pub fn (c &Context) finish_func() {
 	C.MIR_finish_func(c)
@@ -304,9 +310,10 @@ pub fn (c &Context) remove_insn(item Item, insn Insn) {
 }
 
 // outputs the insn textual representation into given file with a newline
-pub fn (c &Context) output_insn(path string, insn Insn, func Func, newline_p int) {
+pub fn (c &Context) output_insn(path string, insn Insn, func Item, newline_p int) {
+	f := C.get_item_func(func)
 	cfile := open_or_create_file(path)
-	C.MIR_output_insn(c, cfile, insn, func, newline_p)
+	C.MIR_output_insn(c, cfile, insn, f, newline_p)
 }
 
 //------------------------------------------------------------------------------------------------
