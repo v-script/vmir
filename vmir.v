@@ -137,7 +137,9 @@ pub fn (c &Context) new_label() Insn {
 	return C.MIR_new_label(c)
 }
 
-pub fn new_data() {
+// new data
+pub fn (c &Context) new_data(name string, typ Type, nel int, els voidptr) Item {
+	return C.MIR_new_data(c, name.str, typ, nel, els)
 }
 
 // new string data
@@ -149,13 +151,19 @@ pub fn (c &Context) new_string_data(name string, text string) Item {
 	return C.MIR_new_string_data(c, name.str, mir_str)
 }
 
-pub fn new_ref_data() {
+// new reference data
+pub fn (c &Context) new_ref_data(name string, item Item, disp int) Item {
+	return C.MIR_new_ref_data(c, name.str, item, disp)
 }
 
-pub fn new_expr_data() {
+// new expression data
+pub fn (c &Context) new_expr_data(name string, item Item) Item {
+	return C.MIR_new_expr_data(c, name.str, item)
 }
 
-pub fn new_bss() {
+// new memory segment
+pub fn (c &Context) new_bss(name string, len int) Item {
+	return C.MIR_new_bss(c, name.str, len)
 }
 
 // output item

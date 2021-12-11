@@ -100,8 +100,20 @@ pub fn C.MIR_new_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.M
 // function creation is finished, add endfunc
 pub fn C.MIR_finish_func(&C.MIR_context_t)
 
+// new data
+pub fn C.MIR_new_data(&C.MIR_context_t, &byte, Type, int, voidptr) C.MIR_item_t
+
 // new string data
 pub fn C.MIR_new_string_data(&C.MIR_context_t, &byte, C.MIR_str) C.MIR_item_t
+
+// new reference data
+pub fn C.MIR_new_ref_data(&C.MIR_context_t, &byte, &C.MIR_item_t, int) C.MIR_item_t
+
+// new expression data
+pub fn C.MIR_new_expr_data(&C.MIR_context_t, &byte, &C.MIR_item_t) C.MIR_item_t
+
+// new memory segment
+pub fn C.MIR_new_bss(&C.MIR_context_t, &byte, int) C.MIR_item_t
 
 // output item
 pub fn C.MIR_output_item(&C.MIR_context_t, &C.FILE, &C.MIR_item_t)
