@@ -31,7 +31,17 @@ pub struct C.MIR_insn_t {}
 [typedef]
 pub struct C.MIR_op_t {}
 
+[typedef]
+pub struct C.MIR_reg_t {}
+
+[typedef]
+pub struct C.MIR_disp_t {}
+
+[typedef]
+pub struct C.MIR_scale_t {}
+
 // context
+[typedef]
 pub struct C.MIR_context_t {}
 
 // module
@@ -47,6 +57,7 @@ pub struct C.MIR_item_t {}
 pub struct C.MIR_func_t {}
 
 // module label
+[typedef]
 pub struct C.MIR_label_t {}
 
 // init context
@@ -94,8 +105,12 @@ pub fn C.MIR_new_forward(&C.MIR_context_t, &byte) C.MIR_item_t
 // new prototype
 pub fn C.MIR_new_proto_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) C.MIR_item_t
 
+pub fn C.MIR_new_vararg_proto_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, C.MIR_var_t) Item
+
 // new func arr
 pub fn C.MIR_new_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) C.MIR_item_t
+
+pub fn C.MIR_new_vararg_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) C.MIR_item_t
 
 // function creation is finished, add endfunc
 pub fn C.MIR_finish_func(&C.MIR_context_t)
@@ -155,7 +170,17 @@ pub fn C.MIR_new_float_op(&C.MIR_context_t, f32) C.MIR_op_t
 pub fn C.MIR_new_double_op(&C.MIR_context_t, f64) C.MIR_op_t
 pub fn C.MIR_new_ldouble_op(&C.MIR_context_t, f64) C.MIR_op_t
 
+// new string op
 pub fn C.MIR_new_str_op(&C.MIR_context_t, C.MIR_str) C.MIR_op_t
+
+// new reference op
+pub fn C.MIR_new_ref_op(&C.MIR_context_t, &C.MIR_item_t) C.MIR_op_t
+
+// new register (variable) operands
+pub fn C.MIR_new_reg_op(&C.MIR_context_t, &C.MIR_reg_t) C.MIR_op_t
+
+// new memory operands,consists of type, displacement, base register, index register and index scale
+pub fn C.MIR_new_mem_op(&C.MIR_context_t, Type, &C.MIR_disp_t, &C.MIR_reg_t, &C.MIR_reg_t, &C.MIR_scale_t) C.MIR_op_t
 
 // new lable op
 pub fn C.MIR_new_label_op(&C.MIR_context_t, C.MIR_label_t) C.MIR_op_t

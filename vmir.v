@@ -36,6 +36,12 @@ pub type Insn = C.MIR_insn_t
 
 pub type Op = C.MIR_op_t
 
+pub type Reg = C.MIR_reg_t
+
+pub type Disp = C.MIR_disp_t
+
+pub type Scale = C.MIR_scale_t
+
 pub type Label = C.MIR_label_t
 
 // init context
@@ -110,21 +116,19 @@ pub fn (c &Context) new_proto(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_proto_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
-pub fn new_vararg_proto_arr() {
-}
-
-pub fn new_vararg_proto() {
-}
-
-pub fn new_vararg_func_arr() {
-}
-
-pub fn new_vararg_func() {
+// new vararg prototype, the only difference is that two or more prototype argument names can be the same
+pub fn (c &Context) new_vararg_proto(name string, rets []Type, args []Var) Item {
+	return C.MIR_new_vararg_proto_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
 // new func
 pub fn (c &Context) new_func(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_func_arr(c, name.str, rets.len, rets.data, args.len, args.data)
+}
+
+// new vararg func,
+pub fn (c &Context) new_vararg_func(name string, rets []Type, args []Var) Item {
+	return C.MIR_new_vararg_func_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
 // function creation is finished, add endfunc
@@ -199,6 +203,7 @@ pub fn (c &Context) new_ldouble_op(d f64) Op {
 	return C.MIR_new_ldouble_op(c, d)
 }
 
+// new string op
 pub fn (c &Context) new_str_op(s string) Op {
 	mir_str := C.MIR_str{
 		len: s.len
@@ -212,13 +217,19 @@ pub fn (c &Context) new_str_op(s string) Op {
 // 	return  C.MIR_new_label_op(c, C.MIR_label_t(label))
 // }
 
-pub fn new_ref_op() {
+// new reference operands
+pub fn (c &Context) new_ref_op(item Item) Op {
+	return C.MIR_new_ref_op(c, item)
 }
 
-pub fn new_reg_op() {
+// new register (variable) operands
+pub fn (c &Context) new_reg_op(reg Reg) Op {
+	return C.MIR_new_reg_op(c, reg)
 }
 
-pub fn new_mem_op() {
+// new memory operands,consists of type, displacement, base register, index register and index scale
+pub fn (c &Context) new_mem_op(typ Type, disp Disp, base Reg, index Reg, scale Scale) Op {
+	return C.MIR_new_mem_op(c, typ, disp, base, index, scale)
 }
 
 // output op
