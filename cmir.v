@@ -4,6 +4,26 @@ module vmir
 #include "mir.h"
 #include "mir-gen.h"
 
+// context
+[typedef]
+pub struct C.MIR_context_t {}
+
+// module
+[typedef]
+pub struct C.MIR_module_t {}
+
+// module item
+[typedef]
+pub struct C.MIR_item_t {}
+
+// func
+[typedef]
+pub struct C.MIR_func_t {}
+
+// module label
+[typedef]
+pub struct C.MIR_label_t {}
+
 pub struct C.MIR_var {
 	@type Type
 	name  &byte
@@ -15,6 +35,7 @@ pub struct C.MIR_str {
 	s   &byte
 }
 
+[typedef]
 pub struct C.MIR_str_t {}
 
 pub struct C.MIR_insn {
@@ -40,25 +61,8 @@ pub struct C.MIR_disp_t {}
 [typedef]
 pub struct C.MIR_scale_t {}
 
-// context
 [typedef]
-pub struct C.MIR_context_t {}
-
-// module
-[typedef]
-pub struct C.MIR_module_t {}
-
-// module item
-[typedef]
-pub struct C.MIR_item_t {}
-
-// func
-[typedef]
-pub struct C.MIR_func_t {}
-
-// module label
-[typedef]
-pub struct C.MIR_label_t {}
+pub struct C.MIR_val_t {}
 
 // init context
 pub fn C.MIR_init() &C.MIR_context_t
@@ -187,3 +191,25 @@ pub fn C.MIR_new_label_op(&C.MIR_context_t, C.MIR_label_t) C.MIR_op_t
 
 // output op
 pub fn C.MIR_output_op(&C.MIR_context_t, &C.FILE, &C.MIR_op_t, &C.MIR_func_t)
+
+// other
+
+// get and set up the current error function
+pub fn C.MIR_get_error_func(&C.MIR_context_t) &C.MIR_error_func_t
+pub fn C.MIR_set_error_func(&C.MIR_context_t, &C.MIR_error_func_t)
+
+// load module
+pub fn C.MIR_load_module(&C.MIR_context_t, &C.MIR_module_t)
+
+// load external
+pub fn C.MIR_load_external(&C.MIR_context_t, &byte, voidptr)
+
+// link
+pub fn C.MIR_link(&C.MIR_context_t)
+
+// interpret
+pub fn C.MIR_interp_arr(&C.MIR_context_t, &C.MIR_item_t, &C.MIR_val_t, int, &C.MIR_val_t)
+pub fn C.MIR_interp_arr_varg(&C.MIR_context_t, &C.MIR_item_t, &C.MIR_val_t, int, &C.MIR_val_t, C.va_list)
+
+// setup the C function interface
+pub fn C.MIR_set_interp_interface(&C.MIR_context_t, &C.MIR_item_t)

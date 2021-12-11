@@ -286,26 +286,37 @@ pub fn (c &Context) output_insn(path string, insn Insn, func Func, newline_p int
 }
 
 // other api
-pub fn get_error_func() {
+// get the current error function
+pub fn (c &Context) get_error_func() &C.MIR_error_func_t {
+	return C.MIR_get_error_func(c)
 }
 
-pub fn set_error_func() {
+// set up the current error function
+pub fn (c &Context) set_error_func(func &C.MIR_error_func_t) {
+	C.MIR_set_error_func(c, func)
 }
 
-pub fn load_module() {
+// load module
+pub fn (c &Context) load_module(mod Module) {
+	C.MIR_load_module(c, mod)
 }
 
-pub fn load_external() {
+// load external
+pub fn (c &Context) load_external(name string, addr voidptr) {
+	C.MIR_load_external(c, name.str, addr)
 }
 
 pub fn link() {
 }
 
 // run with interpreter
-pub fn interp() {
+pub fn (c &Context) interp(func_item Item, results []C.MIR_val_t, vals []C.MIR_val_t) {
+	C.MIR_interp_arr(c, func_item, results.data, vals.len, vals.data)
 }
 
-pub fn set_interp_interface() {
+//setup the C function interface 
+pub fn (c &Context) set_interp_interface(func_item Item) {
+	C.MIR_set_interp_interface(c,func_item)
 }
 
 // generator
