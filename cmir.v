@@ -64,6 +64,7 @@ pub struct C.MIR_scale_t {}
 [typedef]
 pub struct C.MIR_val_t {}
 
+//------------------------------------------------------------------------------------------------
 // init context
 pub fn C.MIR_init() &C.MIR_context_t
 
@@ -167,6 +168,7 @@ pub fn C.MIR_output_insn(&C.MIR_context_t, &C.FILE, &C.MIR_insn_t, &C.MIR_func_t
 // new label
 pub fn C.MIR_new_label(&C.MIR_context_t) C.MIR_insn_t
 
+//------------------------------------------------------------------------------------------------
 // op
 pub fn C.MIR_new_int_op(&C.MIR_context_t, i64) C.MIR_op_t
 pub fn C.MIR_new_uint_op(&C.MIR_context_t, u64) C.MIR_op_t
@@ -192,6 +194,7 @@ pub fn C.MIR_new_label_op(&C.MIR_context_t, C.MIR_label_t) C.MIR_op_t
 // output op
 pub fn C.MIR_output_op(&C.MIR_context_t, &C.FILE, &C.MIR_op_t, &C.MIR_func_t)
 
+//------------------------------------------------------------------------------------------------
 // other
 
 // get and set up the current error function
@@ -207,9 +210,44 @@ pub fn C.MIR_load_external(&C.MIR_context_t, &byte, voidptr)
 // link
 pub fn C.MIR_link(&C.MIR_context_t)
 
+//------------------------------------------------------------------------------------------------
 // interpret
 pub fn C.MIR_interp_arr(&C.MIR_context_t, &C.MIR_item_t, &C.MIR_val_t, int, &C.MIR_val_t)
 pub fn C.MIR_interp_arr_varg(&C.MIR_context_t, &C.MIR_item_t, &C.MIR_val_t, int, &C.MIR_val_t, C.va_list)
 
 // setup the C function interface
 pub fn C.MIR_set_interp_interface(&C.MIR_context_t, &C.MIR_item_t)
+
+//------------------------------------------------------------------------------------------------
+// MIR_gen fns which are in mir_gen.h
+
+// init gen, gens_num defines how many generator instances you need.
+// each generator instance can be used in a different thread to compile different MIR functions from the same context.
+pub fn C.MIR_gen_init(&C.MIR_context_t, int)
+
+// frees all internal generator data (and its instances) for the context
+pub fn C.MIR_gen_finish(&C.MIR_context_t)
+
+// generates machine code of given MIR function in generator instance gen_num and returns an address to call it
+pub fn C.MIR_gen(&C.MIR_context_t, int, &C.MIR_item_t) voidptr
+
+// sets up MIR generator debug file
+// debugging and optimization information will be output to the file according to the current generator debug level
+pub fn C.MIR_gen_set_debug_file(&C.MIR_context_t, int, &C.FILE)
+
+// sets up MIR generator debug level
+// the default level value is maximum possible level for printing information as much as possible. Negative level results in no output
+pub fn C.MIR_gen_set_debug_level(&C.MIR_context_t, int, int)
+
+// sets up optimization level for MIR generator instance gen_num
+// 0 means only register allocator and machine code generator work
+// 1 means additional code selection task. On this level MIR generator creates more compact and faster code than on zero level with practically on the same speed
+// 2 means additionally common sub-expression elimination and sparse conditional constant propagation. This is a default level. This level is valuable if you generate bad input MIR code with a lot redundancy and constants. The generation speed on level 1 is about 50% faster than on level 2
+// 3 means additionally register renaming and loop invariant code motion. The generation speed on level 2 is about 50% faster than on level 3
+pub fn C.MIR_gen_set_optimize_level(&C.MIR_context_t, int, u32)
+
+pub fn C.MIR_set_gen_interface(&C.MIR_context_t, &C.MIR_item_t)
+
+pub fn C.MIR_set_parallel_gen_interface(&C.MIR_context_t, &C.MIR_item_t)
+
+pub fn C.MIR_set_lazy_gen_interface(&C.MIR_context_t, &C.MIR_item_t)

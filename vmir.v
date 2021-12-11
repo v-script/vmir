@@ -32,6 +32,8 @@ pub type Func = C.MIR_func_t
 
 pub type Var = C.MIR_var
 
+pub type Val = C.MIR_val_t
+
 pub type Insn = C.MIR_insn_t
 
 pub type Op = C.MIR_op_t
@@ -44,6 +46,7 @@ pub type Scale = C.MIR_scale_t
 
 pub type Label = C.MIR_label_t
 
+//------------------------------------------------------------------------------------------------
 // init context
 pub fn new_context() &Context {
 	c := C.MIR_init()
@@ -182,6 +185,7 @@ pub fn (c &Context) output_module(path string, mod Module) {
 	C.MIR_output_module(c, cfile, mod)
 }
 
+//------------------------------------------------------------------------------------------------
 // operands
 pub fn (c &Context) new_int_op(i i64) Op {
 	return C.MIR_new_int_op(c, i)
@@ -238,6 +242,7 @@ pub fn (c &Context) output_op(path string, op Op, func Func) {
 	C.MIR_output_op(c, cfile, op, func)
 }
 
+//------------------------------------------------------------------------------------------------
 // insn
 pub fn (c &Context) new_insn(code Insn_code, ops []Op) Insn {
 	return C.MIR_new_insn_arr(c, code, ops.len, ops.data)
@@ -285,6 +290,7 @@ pub fn (c &Context) output_insn(path string, insn Insn, func Func, newline_p int
 	C.MIR_output_insn(c, cfile, insn, func, newline_p)
 }
 
+//------------------------------------------------------------------------------------------------
 // other api
 // get the current error function
 pub fn (c &Context) get_error_func() &C.MIR_error_func_t {
@@ -309,31 +315,66 @@ pub fn (c &Context) load_external(name string, addr voidptr) {
 pub fn link() {
 }
 
+//------------------------------------------------------------------------------------------------
+// interpret
 // run with interpreter
-pub fn (c &Context) interp(func_item Item, results []C.MIR_val_t, vals []C.MIR_val_t) {
+pub fn (c &Context) interp(func_item Item, results []Val, vals []Val) {
 	C.MIR_interp_arr(c, func_item, results.data, vals.len, vals.data)
 }
 
-//setup the C function interface 
+// setup the C function interface
 pub fn (c &Context) set_interp_interface(func_item Item) {
-	C.MIR_set_interp_interface(c,func_item)
+	C.MIR_set_interp_interface(c, func_item)
 }
 
+//------------------------------------------------------------------------------------------------
 // generator
-pub fn gen_init() {
+// init gen, gens_num defines how many generator instances you need.
+// each generator instance can be used in a different thread to compile different MIR functions from the same context.
+pub fn (c &Context) gen_init(gens_num int) {
+	C.MIR_gen_init(c, gens_num)
 }
 
-pub fn gen_finish() {
+// frees all internal generator data (and its instances) for the context
+pub fn (c &Context) gen_finish() {
+	C.MIR_gen_finish(c)
 }
 
-pub fn gen() {
+// generates machine code of given MIR function in generator instance gen_num and returns an address to call it
+pub fn (c &Context) gen(gen_num int, func_item Item) voidptr {
+	return C.MIR_gen(c, gen_num, func_item)
 }
 
-pub fn set_degug_file() {
+// sets up MIR generator debug file
+// debugging and optimization information will be output to the file according to the current generator debug level
+pub fn (c &Context) set_degug_file(gen_num int, path string) {
+	cfile := open_or_create_file(path)
+	C.MIR_gen_set_debug_file(c, gen_num, cfile)
 }
 
-pub fn gen_set_debug_level() {
+// sets up MIR generator debug level
+// the default level value is maximum possible level for printing information as much as possible. Negative level results in no output
+pub fn (c &Context) gen_set_debug_level(gen_num int, debug_level int) {
+	C.MIR_gen_set_debug_level(c, gen_num, debug_level)
 }
 
-pub fn gen_set_optimize_level() {
+// sets up optimization level for MIR generator instance gen_num
+// 0 means only register allocator and machine code generator work
+// 1 means additional code selection task. On this level MIR generator creates more compact and faster code than on zero level with practically on the same speed
+// 2 means additionally common sub-expression elimination and sparse conditional constant propagation. This is a default level. This level is valuable if you generate bad input MIR code with a lot redundancy and constants. The generation speed on level 1 is about 50% faster than on level 2
+// 3 means additionally register renaming and loop invariant code motion. The generation speed on level 2 is about 50% faster than on level 3
+pub fn (c &Context) gen_set_optimize_level(gen_num int, level u32) {
+	C.MIR_gen_set_optimize_level(c, gen_num, level)
+}
+
+pub fn (c &Context) set_gen_interface(func_item Item) {
+	C.MIR_set_gen_interface(c, func_item)
+}
+
+pub fn (c &Context) set_parallel_gen_interface(func_item Item) {
+	C.MIR_set_parallel_gen_interface(c, func_item)
+}
+
+pub fn (c &Context) set_lazy_gen_interface(func_item Item) {
+	C.MIR_set_lazy_gen_interface(c, func_item)
 }
