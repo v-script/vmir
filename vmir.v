@@ -28,6 +28,8 @@ pub type Module = C.MIR_module_t
 
 pub type Item = C.MIR_item_t
 
+pub type Func = C.MIR_func_t
+
 pub type Var = C.MIR_var
 
 pub type Insn = C.MIR_insn_t
@@ -64,20 +66,12 @@ pub fn (c &Context) scan_string(s string) {
 
 // outputs binary MIR representation to file
 pub fn (c &Context) write(path string) ? {
-	if !os.exists(path) {
-		mut file := os.create(path) or { panic(err) }
-		file.close()
-	}
-	cfile := os.vfopen(path, 'wb') or { panic(err) }
-	C.MIR_write(c, cfile)
+	C.MIR_write(c, open_or_create_file(path))
 }
 
 // read binary MIR representation from file
 pub fn (c &Context) read(path string) ? {
-	if !os.exists(path) {
-		return error('file does not exist: $path')
-	}
-	cfile := os.vfopen(path, 'rb') or { panic(err) }
+	cfile := get_file(path) or { panic(err) }
 	C.MIR_read(c, cfile)
 }
 
@@ -223,30 +217,44 @@ pub fn (c &Context) new_insn(code Insn_code, ops []Op) Insn {
 
 // call insn
 pub fn (c &Context) new_call_insn(args ...Op) Insn {
-	return c.new_insn(Insn_code.call, args)
+	return c.new_insn(.call, args)
 }
 
 // return insn
 pub fn (c &Context) new_ret_insn(args ...Op) Insn {
-	return c.new_insn(Insn_code.ret, args)
+	println(args[0])
+	return c.new_insn(.ret, args)
 }
 
-pub fn prepend_insn() {
+// add a created insn at the beginning of function insn list
+pub fn (c &Context) prepend_insn(item Item, insn Insn) {
+	C.MIR_prepend_insn(c, item, insn)
 }
 
-pub fn append_insn() {
+// add a created insn at the end of function insn list
+pub fn (c &Context) append_insn(item Item, insn Insn) {
+	C.MIR_append_insn(c, item, insn)
 }
 
-pub fn insert_insn_after() {
+// insert a created insn in the middle of function insn,after exists insn
+pub fn (c &Context) insert_insn_after(item Item, after Insn, new Insn) {
+	C.MIR_insert_insn_after(c, item, after, new)
 }
 
-pub fn insert_insn_before() {
+// insert a created insn in the middle of function insn,before exists insn
+pub fn (c &Context) insert_insn_before(item Item, before Insn, new Insn) {
+	C.MIR_insert_insn_after(c, item, before, new)
 }
 
-pub fn remove_insn() {
+// remove insn from the function list
+pub fn (c &Context) remove_insn(item Item, insn Insn) {
+	C.MIR_remove_insn(c, item, insn)
 }
 
-pub fn output_insn() {
+// outputs the insn textual representation into given file with a newline
+pub fn (c &Context) output_insn(path string, insn Insn, func Func, newline_p int) {
+	cfile := open_or_create_file(path)
+	C.MIR_output_insn(c, cfile, insn, func, newline_p)
 }
 
 // other api
@@ -289,4 +297,21 @@ pub fn gen_set_debug_level() {
 }
 
 pub fn gen_set_optimize_level() {
+}
+
+pub fn open_or_create_file(path string) &C.FILE {
+	if !os.exists(path) {
+		mut file := os.create(path) or { panic(err) }
+		file.close()
+	}
+	cfile := os.vfopen(path, 'wb') or { panic(err) }
+	return cfile
+}
+
+pub fn get_file(path string) ?&C.FILE {
+	if !os.exists(path) {
+		return error('file does not exist: $path')
+	}
+	cfile := os.vfopen(path, 'rb') or { panic(err) }
+	return cfile
 }
