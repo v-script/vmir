@@ -4,6 +4,9 @@ module vmir
 #include "mir.h"
 #include "mir-gen.h"
 
+#flag -lvmir
+#include "vmir.h"
+
 // context
 [typedef]
 pub struct C.MIR_context_t {}
@@ -14,23 +17,22 @@ pub struct C.MIR_module_t {}
 
 // module item
 [typedef]
-pub struct C.MIR_item_t {
-pub mut:
-	u Un
-}
+pub struct C.MIR_item_t {}
 
-pub union Un {
-pub mut:
-	func       C.MIR_func_t
-	proto      C.MIR_proto_t
-	import_id  C.MIR_name_t
-	export_id  C.MIR_name_t
-	forward_id C.MIR_name_t
-	data       C.MIR_data_t
-	ref_data   C.MIR_ref_data_t
-	expr_data  C.MIR_expr_data_t
-	bss        C.MIR_bss_t
-}
+// V do not support anonymous union int C.MIR_item_t yet.
+// temp way: get_item_func()
+// pub union Un {
+// pub mut:
+// 	func       C.MIR_func_t
+// 	proto      C.MIR_proto_t
+// 	import_id  C.MIR_name_t
+// 	export_id  C.MIR_name_t
+// 	forward_id C.MIR_name_t
+// 	data       C.MIR_data_t
+// 	ref_data   C.MIR_ref_data_t
+// 	expr_data  C.MIR_expr_data_t
+// 	bss        C.MIR_bss_t
+// }
 
 pub struct C.MIR_item {}
 
@@ -50,13 +52,14 @@ pub struct C.MIR_label_t {}
 [typedef]
 pub struct C.MIR_name_t {}
 
-pub struct C.MIR_var_t {
+pub struct C.MIR_var {
 	@type Type
 	name  &byte
 	size  int
 }
+
 [typedef]
-pub struct C.MIR_var {}
+pub struct C.MIR_var_t {}
 
 pub struct C.MIR_str {
 	len int
@@ -71,19 +74,24 @@ pub struct C.MIR_insn {
 	code int
 	nops int
 }
+
 pub struct C.MIR_data {}
+
 [typedef]
 pub struct C.MIR_data_t {}
 
 pub struct C.MIR_ref_data {}
+
 [typedef]
 pub struct C.MIR_ref_data_t {}
 
 pub struct C.MIR_expr_data {}
+
 [typedef]
 pub struct C.MIR_expr_data_t {}
 
 pub struct C.MIR_bss {}
+
 [typedef]
 pub struct C.MIR_bss_t {}
 
@@ -306,3 +314,7 @@ pub fn C.MIR_set_gen_interface(&C.MIR_context_t, &C.MIR_item_t)
 pub fn C.MIR_set_parallel_gen_interface(&C.MIR_context_t, &C.MIR_item_t)
 
 pub fn C.MIR_set_lazy_gen_interface(&C.MIR_context_t, &C.MIR_item_t)
+
+//------------------------------------------------------------------------------------------------
+// get MIR_item_t func in union: item->u.func
+pub fn C.get_item_func(&C.MIR_item_t) C.MIR_func_t

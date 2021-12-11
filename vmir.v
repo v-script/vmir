@@ -32,7 +32,7 @@ pub type Func = C.MIR_func_t
 
 pub type Proto = C.MIR_proto_t
 
-pub type Var = C.MIR_var_t
+pub type Var = C.MIR_var
 
 pub type Val = C.MIR_val_t
 
@@ -148,10 +148,8 @@ pub fn (c &Context) new_vararg_func(name string, rets []Type, args []Var) Item {
 
 // new func local variable(reg)
 pub fn (c &Context) new_func_reg(func Item, typ Type, name string) Reg {
-	unsafe {
-		f := func.u.func
-		return C.MIR_new_func_reg(c, f, typ, name.str)
-	}
+	f := C.get_item_func(func)
+	return C.MIR_new_func_reg(c, f, typ, name.str)
 }
 
 // function creation is finished, add endfunc
