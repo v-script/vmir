@@ -16,11 +16,11 @@ more information：https://github.com/vnmakarov/mir/blob/master/INSTALL.md
 ```v
 module main
 
-import vmir { Op }
+import vmir { Val }
 
 fn main() {
 	c := vmir.new_context()
-	c.new_module('m')
+	m := c.new_module('m')
 
 	printf_import := c.new_import('printf')
 
@@ -36,16 +36,15 @@ fn main() {
 	ii := c.reg('ii', main_fn)
 
 	a := c.new_int_op(1)
-	b := c.new_int_op(2)
+	b := c.new_reg_op(c.reg('i', main_fn))
 	sum := c.new_reg_op(ii)
-	mut ops := []Op{}
-	ops << sum
-	ops << a
-	ops << b
+	ops := [sum, a, b]
 	insn1 := c.new_insn(.add, ops)
 	c.append_insn(main_fn, insn1)
 
-	call_insn := c.new_call_insn(c.new_ref_op(p), c.new_ref_op(printf_import), c.new_str_op('hello world'))
+	call_ops := [c.new_ref_op(p), c.new_ref_op(printf_import),
+		c.new_str_op('hello world\n')]
+	call_insn := c.new_call_insn_arr(call_ops)
 	c.append_insn(main_fn, call_insn)
 
 	fin := c.new_label()
@@ -54,12 +53,21 @@ fn main() {
 	c.append_insn(main_fn, c.new_ret_insn(c.new_reg_op(ii)))
 
 	c.finish_func()
+	c.new_export('main')
 	c.finish_module()
 
 	c.output('./m.mir') or { panic(err) }
-	c.finish()
-
+	result := Val{}
+	args := c.new_val_arr(Val{ i: 5 })
+	// start load -> link -> interpret -> return result
+	c.load_external('printf', C.printf)
+	c.load_module(m)
+	c.link()
+	// interpret from main_fn with arg i, and return result
+	c.interp(main_fn, &result, args)
+	println('main_fn returns: $result.i')
 	println('done')
+	c.finish()
 }
 
 ```
@@ -73,12 +81,14 @@ p_printf:	proto	u64:arg
 main:	func	i64, i64:i
 	local	i64:ii
 # 1 arg, 1 local
-	add	ii, 1, 2
-	call	p_printf, printf, "hello world"
+	add	ii, 1, i
+	call	p_printf, printf, "hello world\n"
 L1:
 	ret	ii
 	endfunc
+	export	main
 	endmodule
+
 
 ```
 

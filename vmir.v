@@ -307,7 +307,6 @@ pub fn (c &Context) new_call_insn_arr(args []Op) Insn {
 
 // new fn return insn
 pub fn (c &Context) new_ret_insn(args ...Op) Insn {
-	println(args[0])
 	return c.new_insn(.ret, args)
 }
 
@@ -385,9 +384,8 @@ pub fn (c &Context) new_val_arr(vals ...Val) []Val {
 }
 
 // run with interpreter
-pub fn (c &Context) interp(func_item Item, result &Val, nargs int) {
-	vals := []Val{}
-	C.MIR_interp_arr(c, func_item, result, nargs, vals.data)
+pub fn (c &Context) interp(func_item Item, result &Val, args []Val) {
+	C.MIR_interp_arr(c, func_item, result, args.len, args.data)
 }
 
 // setup the C function interface,execute a MIR function code also through C function call,
