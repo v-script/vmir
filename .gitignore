@@ -1,1 +1,5 @@
 /example/demo
+/example/m.mir
+/c/*.o
+/c/*.a
+.DS_Store
