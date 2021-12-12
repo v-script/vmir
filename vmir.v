@@ -163,6 +163,24 @@ pub fn (c &Context) finish_func() {
 	C.MIR_finish_func(c)
 }
 
+// new type array
+pub fn (c &Context) new_type_arr(types ...Type) []Type {
+	return types
+}
+
+// new var
+pub fn (c &Context) new_var(typ Type, name string) Var {
+	return Var{
+		@type: typ
+		name: name.str
+	}
+}
+
+// new var array
+pub fn (c &Context) new_var_arr(vars ...Var) []Var {
+	return vars
+}
+
 // new label
 pub fn (c &Context) new_label() Insn {
 	return C.MIR_new_label(c)

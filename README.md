@@ -16,32 +16,69 @@ more information：https://github.com/vnmakarov/mir/blob/master/INSTALL.md
 ```v
 module main
 
-import vmir
+import vmir { Op }
 
 fn main() {
 	c := vmir.new_context()
 	c.new_module('m')
-	mut rets := []Type{}
-	rets << .mir_i64
-	mut vars := []Var{}
-	vars << Var{
-		@type: .mir_i64
-		name: 'i'.str
-	}
+
+	printf_import := c.new_import('printf')
+
+	p_rets := c.new_type_arr()
+	p_vars := c.new_var_arr(c.new_var(.mir_u64, 'arg'))
+	p := c.new_proto('p_printf', p_rets, p_vars)
+
+	rets := c.new_type_arr(.mir_i64)
+	vars := c.new_var_arr(c.new_var(.mir_i64, 'i'))
+
 	main_fn := c.new_func('main', rets, vars)
 	c.new_func_reg(main_fn, .mir_i64, 'ii')
-	c.new_func_reg(main_fn, .mir_f, 'ff')
+	ii := c.reg('ii', main_fn)
 
-	c.new_forward('myforwoard')
-	c.new_string_data('out', 'hello world\n')
+	a := c.new_int_op(1)
+	b := c.new_int_op(2)
+	sum := c.new_reg_op(ii)
+	mut ops := []Op{}
+	ops << sum
+	ops << a
+	ops << b
+	insn1 := c.new_insn(.add, ops)
+	c.append_insn(main_fn, insn1)
+
+	call_insn := c.new_call_insn(c.new_ref_op(p), c.new_ref_op(printf_import), c.new_str_op('hello world'))
+	c.append_insn(main_fn, call_insn)
+
+	fin := c.new_label()
+	c.append_insn(main_fn, fin)
+
+	c.append_insn(main_fn, c.new_ret_insn(c.new_reg_op(ii)))
+
 	c.finish_func()
 	c.finish_module()
+
 	c.output('./m.mir') or { panic(err) }
-	c.write('./m.bmir') or { panic(err) }
 	c.finish()
+
 	println('done')
 }
 
+```
+
+generated mir：
+
+```assembly
+m:	module
+	import	printf
+p_printf:	proto	u64:arg
+main:	func	i64, i64:i
+	local	i64:ii
+# 1 arg, 1 local
+	add	ii, 1, 2
+	call	p_printf, printf, "hello world"
+L1:
+	ret	ii
+	endfunc
+	endmodule
 
 ```
 
