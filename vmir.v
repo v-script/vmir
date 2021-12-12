@@ -408,6 +408,7 @@ pub fn (c &Context) gen_finish() {
 }
 
 // generates machine code of given MIR function in generator instance gen_num and returns an address to call it
+// gen_num should be a number in the range 0 .. gens_num - 1 from corresponding MIR_gen_init
 pub fn (c &Context) gen(gen_num int, func_item Item) voidptr {
 	return C.MIR_gen(c, gen_num, func_item)
 }
