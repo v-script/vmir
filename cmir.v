@@ -238,6 +238,7 @@ pub fn C.MIR_reg(&C.MIR_context_t, &byte, &C.MIR_func_t) C.MIR_reg_t
 
 //------------------------------------------------------------------------------------------------
 // op
+// new literal op
 pub fn C.MIR_new_int_op(&C.MIR_context_t, i64) C.MIR_op_t
 pub fn C.MIR_new_uint_op(&C.MIR_context_t, u64) C.MIR_op_t
 pub fn C.MIR_new_float_op(&C.MIR_context_t, f32) C.MIR_op_t
@@ -250,16 +251,16 @@ pub fn C.MIR_new_str_op(&C.MIR_context_t, C.MIR_str) C.MIR_op_t
 // new reference op
 pub fn C.MIR_new_ref_op(&C.MIR_context_t, &C.MIR_item_t) C.MIR_op_t
 
-// new register (variable) operands
+// new register (local variable) operands
 pub fn C.MIR_new_reg_op(&C.MIR_context_t, &C.MIR_reg_t) C.MIR_op_t
 
 // new memory operands,consists of type, displacement, base register, index register and index scale
 pub fn C.MIR_new_mem_op(&C.MIR_context_t, Type, &C.MIR_disp_t, &C.MIR_reg_t, &C.MIR_reg_t, &C.MIR_scale_t) C.MIR_op_t
 
-// new lable op
+// new label op
 pub fn C.MIR_new_label_op(&C.MIR_context_t, C.MIR_label_t) C.MIR_op_t
 
-// output op
+// output op to file
 pub fn C.MIR_output_op(&C.MIR_context_t, &C.FILE, &C.MIR_op_t, &C.MIR_func_t)
 
 //------------------------------------------------------------------------------------------------

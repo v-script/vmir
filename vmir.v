@@ -240,18 +240,17 @@ pub fn (c &Context) new_str_op(s string) Op {
 	return C.MIR_new_str_op(c, mir_str)
 }
 
-// TODO:
-// pub fn (c &Context) new_label_op() Op {
-// 	label := c.new_label()
-// 	return  C.MIR_new_label_op(c, C.MIR_label_t(label))
-// }
+// new label op
+pub fn (c &Context) new_label_op(label Label) Op {
+	return C.MIR_new_label_op(c, C.MIR_label_t(label))
+}
 
 // new reference operands
 pub fn (c &Context) new_ref_op(item Item) Op {
 	return C.MIR_new_ref_op(c, item)
 }
 
-// new register (variable) operands
+// new register (local variable) operands
 pub fn (c &Context) new_reg_op(reg Reg) Op {
 	return C.MIR_new_reg_op(c, reg)
 }
@@ -273,12 +272,12 @@ pub fn (c &Context) new_insn(code Insn_code, ops []Op) Insn {
 	return C.MIR_new_insn_arr(c, code, ops.len, ops.data)
 }
 
-// call insn
+// new fn call insn
 pub fn (c &Context) new_call_insn(args ...Op) Insn {
 	return c.new_insn(.call, args)
 }
 
-// return insn
+// new fn return insn
 pub fn (c &Context) new_ret_insn(args ...Op) Insn {
 	println(args[0])
 	return c.new_insn(.ret, args)
