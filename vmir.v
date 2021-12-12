@@ -284,6 +284,11 @@ pub fn (c &Context) output_op(path string, op Op, func Func) {
 	C.MIR_output_op(c, cfile, op, func)
 }
 
+// new op array
+pub fn (c &Context) new_op_arr(ops ...Op) []Op {
+	return ops
+}
+
 //------------------------------------------------------------------------------------------------
 // insn
 pub fn (c &Context) new_insn(code Insn_code, ops []Op) Insn {
@@ -295,9 +300,19 @@ pub fn (c &Context) new_call_insn(args ...Op) Insn {
 	return c.new_insn(.call, args)
 }
 
+// new fn call insn array
+pub fn (c &Context) new_call_insn_arr(args []Op) Insn {
+	return c.new_insn(.call, args)
+}
+
 // new fn return insn
 pub fn (c &Context) new_ret_insn(args ...Op) Insn {
 	println(args[0])
+	return c.new_insn(.ret, args)
+}
+
+// new fn return insn
+pub fn (c &Context) new_ret_insn_arr(args []Op) Insn {
 	return c.new_insn(.ret, args)
 }
 
@@ -355,15 +370,24 @@ pub fn (c &Context) load_external(name string, addr voidptr) {
 	C.MIR_load_external(c, name.str, addr)
 }
 
-// TODO:
-pub fn link() {
+// imports/exports of modules loaded since the last link can be linked
+// pub fn (c &Context) link(set_interface_fn voidptr, import_resolver_fn voidptr) {
+pub fn (c &Context) link() {
+	C.MIR_link(c, C.MIR_set_interp_interface, C.NULL)
 }
 
 //------------------------------------------------------------------------------------------------
 // interpret
+
+// new val array
+pub fn (c &Context) new_val_arr(vals ...Val) []Val {
+	return vals
+}
+
 // run with interpreter
-pub fn (c &Context) interp(func_item Item, results []Val, vals []Val) {
-	C.MIR_interp_arr(c, func_item, results.data, vals.len, vals.data)
+pub fn (c &Context) interp(func_item Item, result &Val, nargs int) {
+	vals := []Val{}
+	C.MIR_interp_arr(c, func_item, result, nargs, vals.data)
 }
 
 // setup the C function interface,execute a MIR function code also through C function call,

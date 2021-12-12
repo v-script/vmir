@@ -266,8 +266,10 @@ pub fn C.MIR_output_op(&C.MIR_context_t, &C.FILE, &C.MIR_op_t, &C.MIR_func_t)
 //------------------------------------------------------------------------------------------------
 // other
 
-// get and set up the current error function
+// get the current error function
 pub fn C.MIR_get_error_func(&C.MIR_context_t) &C.MIR_error_func_t
+
+// set up the current error function
 pub fn C.MIR_set_error_func(&C.MIR_context_t, &C.MIR_error_func_t)
 
 // load module
@@ -277,7 +279,7 @@ pub fn C.MIR_load_module(&C.MIR_context_t, &C.MIR_module_t)
 pub fn C.MIR_load_external(&C.MIR_context_t, &byte, voidptr)
 
 // link
-pub fn C.MIR_link(&C.MIR_context_t)
+pub fn C.MIR_link(&C.MIR_context_t, voidptr, voidptr)
 
 //------------------------------------------------------------------------------------------------
 // interpret
