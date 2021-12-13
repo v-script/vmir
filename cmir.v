@@ -4,9 +4,6 @@ module vmir
 #include "mir.h"
 #include "mir-gen.h"
 
-#flag -lvmir
-#include "vmir.h"
-
 // context
 pub struct C.MIR_context_t {}
 
@@ -329,4 +326,4 @@ pub fn C.MIR_get_error_func(&C.MIR_context_t) &C.MIR_error_func_t
 pub fn C.MIR_set_error_func(&C.MIR_context_t, &C.MIR_error_func_t)
 
 // get MIR_item_t func in union: item->u.func
-pub fn C.get_item_func(&C.MIR_item_t) C.MIR_func_t
+pub fn C.MIR_get_item_func(&C.MIR_context_t, &C.MIR_item_t) C.MIR_func_t

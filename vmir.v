@@ -138,13 +138,13 @@ pub fn (c &Context) new_vararg_func(name string, rets []Type, args []Var) Item {
 
 // new function local variable(reg)
 pub fn (c &Context) new_func_reg(func Item, typ Type, name string) Reg {
-	f := C.get_item_func(func)
+	f := c.get_item_func(func)
 	return C.MIR_new_func_reg(c, f, typ, name.str)
 }
 
 // get function arg(reg)
 pub fn (c &Context) reg(name string, func Item) Reg {
-	f := C.get_item_func(func)
+	f := c.get_item_func(func)
 	return C.MIR_reg(c, name.str, f)
 }
 
@@ -334,7 +334,7 @@ pub fn (c &Context) remove_insn(item Item, insn Insn) {
 
 // outputs the insn textual representation into given file with a newline
 pub fn (c &Context) output_insn(path string, insn Insn, func Item, newline_p int) {
-	f := C.get_item_func(func)
+	f := c.get_item_func(func)
 	cfile := open_or_create_file(path)
 	C.MIR_output_insn(c, cfile, insn, f, newline_p)
 }
@@ -436,4 +436,9 @@ pub fn (c &Context) get_error_func() &C.MIR_error_func_t {
 // set up the current error function
 pub fn (c &Context) set_error_func(func &C.MIR_error_func_t) {
 	C.MIR_set_error_func(c, func)
+}
+
+//get function of item 
+pub fn (c &Context) get_item_func(item Item) Func {
+	return C.MIR_get_item_func(c,item)
 }
