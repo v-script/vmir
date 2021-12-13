@@ -7,7 +7,7 @@ module vmir
 #flag -lvmir
 #include "vmir.h"
 
-// interpreter
+// context
 pub struct C.MIR_context_t {}
 
 // module
@@ -16,10 +16,16 @@ pub struct C.MIR_module_t {}
 
 // module item
 [typedef]
-pub struct C.MIR_item_t {}
+// pub struct C.MIR_item_t {}
 
 // V do not support anonymous union int C.MIR_item_t yet.
 // temp way: get_item_func()
+
+pub struct C.MIR_item_t {
+// pub mut:
+// 	u Un
+}
+
 // pub union Un {
 // pub mut:
 // 	func       C.MIR_func_t
