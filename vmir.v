@@ -91,6 +91,16 @@ pub fn (c &Context) read(path string) ? {
 	C.MIR_read(c, cfile)
 }
 
+// write binary MIR representation through a function given as an argument
+pub fn (c &Context) write_with_func(func voidptr) {
+	C.MIR_write_with_func(c, func)
+}
+
+// read binary MIR representation  through a function given as an argument
+pub fn (c &Context) read_with_func(func voidptr) {
+	C.MIR_read_with_func(c, func)
+}
+
 // new module
 pub fn (c &Context) new_module(name string) Module {
 	return C.MIR_new_module(c, name.str)
@@ -438,7 +448,7 @@ pub fn (c &Context) set_error_func(func &C.MIR_error_func_t) {
 	C.MIR_set_error_func(c, func)
 }
 
-//get function of item 
+// get function of item
 pub fn (c &Context) get_item_func(item Item) Func {
-	return C.MIR_get_item_func(c,item)
+	return C.MIR_get_item_func(c, item)
 }

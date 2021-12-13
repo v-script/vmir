@@ -12,13 +12,14 @@ pub struct C.MIR_context_t {}
 pub struct C.MIR_module_t {}
 
 // module item
-[typedef]
+
 // pub struct C.MIR_item_t {}
 
 // V do not support anonymous union int C.MIR_item_t yet.
+[typedef]
 pub struct C.MIR_item_t {
-// pub mut:
-// 	u Un
+	// pub mut:
+	// 	u Un
 }
 
 // pub union Un {
@@ -143,11 +144,11 @@ pub fn C.MIR_write(&C.MIR_context_t, &C.FILE)
 // read binary MIR representation from file
 pub fn C.MIR_read(&C.MIR_context_t, &C.FILE)
 
-// TODO:write binary MIR representation through a function given as an argument
-pub fn C.MIR_write_with_func()
+// write binary MIR representation through a function given as an argument
+pub fn C.MIR_write_with_func(&C.MIR_context_t, voidptr)
 
-// TODO:read binary MIR representation  through a function given as an argument
-pub fn C.MIR_read_with_func()
+// read binary MIR representation  through a function given as an argument
+pub fn C.MIR_read_with_func(&C.MIR_context_t, voidptr)
 
 // new module
 pub fn C.MIR_new_module(&C.MIR_context_t, &byte) C.MIR_module_t
@@ -272,7 +273,7 @@ pub fn C.MIR_load_external(&C.MIR_context_t, &byte, voidptr)
 // link
 pub fn C.MIR_link(&C.MIR_context_t, voidptr, voidptr)
 
-//interpret
+// interpret
 pub fn C.MIR_interp_arr(&C.MIR_context_t, &C.MIR_item_t, &C.MIR_val_t, int, &C.MIR_val_t)
 pub fn C.MIR_interp_arr_varg(&C.MIR_context_t, &C.MIR_item_t, &C.MIR_val_t, int, &C.MIR_val_t, C.va_list)
 
@@ -280,7 +281,7 @@ pub fn C.MIR_interp_arr_varg(&C.MIR_context_t, &C.MIR_item_t, &C.MIR_val_t, int,
 pub fn C.MIR_set_interp_interface(&C.MIR_context_t, &C.MIR_item_t)
 
 //------------------------------------------------------------------------------------------------
-//generator, fns which are in mir_gen.h
+// generator, fns which are in mir_gen.h
 
 // init gen, gens_num defines how many generator instances you need.
 // each generator instance can be used in a different thread to compile different MIR functions from the same context.
