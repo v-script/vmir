@@ -41,6 +41,7 @@ fn main() {
 	c.finish_module()
 
 	c.output('./m.mir') or { panic(err) }
+	c.write('./m.bmir') or { panic(err)}
 	result := Val{}
 	args := c.new_val_arr(Val{ i: 5 })
 	// start load -> link -> interpret -> return result

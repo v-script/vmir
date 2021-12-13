@@ -16,8 +16,6 @@ pub struct C.MIR_module_t {}
 // pub struct C.MIR_item_t {}
 
 // V do not support anonymous union int C.MIR_item_t yet.
-// temp way: get_item_func()
-
 pub struct C.MIR_item_t {
 // pub mut:
 // 	u Un
@@ -104,8 +102,6 @@ pub struct C.MIR_insn_t {}
 // op
 [typedef]
 pub struct C.MIR_op_t {}
-
-// pub struct C.MIR_reg {}
 
 [typedef]
 pub struct C.MIR_reg_t {}
