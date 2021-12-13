@@ -1,5 +1,5 @@
 ## vmir
-wrap [MIR](https://github.com/vnmakarov/mir) for V
+[MIR](https://github.com/vnmakarov/mir) wrapper for V
 
 ### Installing MIR
 
@@ -98,5 +98,13 @@ L1:
 	export	main
 	endmodule
 
+```
+
+interpret and output：
+
+```shell
+hello world
+main_fn returns: 6
+done
 ```
 
