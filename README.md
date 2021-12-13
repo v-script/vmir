@@ -59,6 +59,7 @@ fn main() {
 	c.output('./m.mir') or { panic(err) }
 	result := Val{}
 	args := c.new_val_arr(Val{ i: 5 })
+  
 	// start load -> link -> interpret -> return result
 	c.load_external('printf', C.printf)
 	c.load_module(m)
@@ -67,10 +68,6 @@ fn main() {
 	c.gen_init(2)
 	c.gen_set_optimize_level(1, 3)
 	c.gen(1, main_fn)
-	// each generator instance can be used in a different
-  // thread to compile different MIR functions
-	// c.gen(2, other_fn)
-
 	// interpret from main_fn with arg i, and return result
 	c.interp(main_fn, &result, args)
 	println('main_fn returns: $result.i')
