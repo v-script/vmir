@@ -1,16 +1,14 @@
-vopidptr
+module vmir
 
-// load module
-pub fn C.MIR_load_module(&C.MIR_context_t, &C.MIR_module_t)
+#flag -lmir
+#include "mir.h"
+#include "mir-gen.h"
 
-// load external
-pub fn C.MIR_load_external(&C.MIR_context_t, &byte, voidptr)
-
-// link
-pub fn C.MIR_link(&C.MIR_context_t, voidptr, voidptr)
+#flag -lvmir
+#include "vmir.h"
 
 // interpreter
-MIR_context_t {}
+pub struct C.MIR_context_t {}
 
 // module
 [typedef]
