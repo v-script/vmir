@@ -1,15 +1,16 @@
-module vmir
+vopidptr
 
-#flag -lmir
-#include "mir.h"
-#include "mir-gen.h"
+// load module
+pub fn C.MIR_load_module(&C.MIR_context_t, &C.MIR_module_t)
 
-#flag -lvmir
-#include "vmir.h"
+// load external
+pub fn C.MIR_load_external(&C.MIR_context_t, &byte, voidptr)
 
-// context
-[typedef]
-pub struct C.MIR_context_t {}
+// link
+pub fn C.MIR_link(&C.MIR_context_t, voidptr, voidptr)
+
+// interpreter
+MIR_context_t {}
 
 // module
 [typedef]
@@ -158,7 +159,7 @@ pub fn C.MIR_new_module(&C.MIR_context_t, &byte) C.MIR_module_t
 pub fn C.MIR_finish_module(&C.MIR_context_t)
 
 // list of all created modules can be gotten
-pub fn C.MIR_get_module_list(&C.MIR_context_t) &C.DLIST_MIR_module_t
+pub fn C.MIR_get_module_list(&C.MIR_context_t) voidptr
 
 // new import item
 pub fn C.MIR_new_import(&C.MIR_context_t, &byte) C.MIR_item_t
@@ -264,14 +265,7 @@ pub fn C.MIR_new_label_op(&C.MIR_context_t, C.MIR_label_t) C.MIR_op_t
 pub fn C.MIR_output_op(&C.MIR_context_t, &C.FILE, &C.MIR_op_t, &C.MIR_func_t)
 
 //------------------------------------------------------------------------------------------------
-// other
-
-// get the current error function
-pub fn C.MIR_get_error_func(&C.MIR_context_t) &C.MIR_error_func_t
-
-// set up the current error function
-pub fn C.MIR_set_error_func(&C.MIR_context_t, &C.MIR_error_func_t)
-
+// interpreter
 // load module
 pub fn C.MIR_load_module(&C.MIR_context_t, &C.MIR_module_t)
 
@@ -281,8 +275,7 @@ pub fn C.MIR_load_external(&C.MIR_context_t, &byte, voidptr)
 // link
 pub fn C.MIR_link(&C.MIR_context_t, voidptr, voidptr)
 
-//------------------------------------------------------------------------------------------------
-// interpret
+//interpret
 pub fn C.MIR_interp_arr(&C.MIR_context_t, &C.MIR_item_t, &C.MIR_val_t, int, &C.MIR_val_t)
 pub fn C.MIR_interp_arr_varg(&C.MIR_context_t, &C.MIR_item_t, &C.MIR_val_t, int, &C.MIR_val_t, C.va_list)
 
@@ -290,7 +283,7 @@ pub fn C.MIR_interp_arr_varg(&C.MIR_context_t, &C.MIR_item_t, &C.MIR_val_t, int,
 pub fn C.MIR_set_interp_interface(&C.MIR_context_t, &C.MIR_item_t)
 
 //------------------------------------------------------------------------------------------------
-// MIR_gen fns which are in mir_gen.h
+//generator, fns which are in mir_gen.h
 
 // init gen, gens_num defines how many generator instances you need.
 // each generator instance can be used in a different thread to compile different MIR functions from the same context.
@@ -324,5 +317,12 @@ pub fn C.MIR_set_parallel_gen_interface(&C.MIR_context_t, &C.MIR_item_t)
 pub fn C.MIR_set_lazy_gen_interface(&C.MIR_context_t, &C.MIR_item_t)
 
 //------------------------------------------------------------------------------------------------
+// other
+// get the current error function
+pub fn C.MIR_get_error_func(&C.MIR_context_t) &C.MIR_error_func_t
+
+// set up the current error function
+pub fn C.MIR_set_error_func(&C.MIR_context_t, &C.MIR_error_func_t)
+
 // get MIR_item_t func in union: item->u.func
 pub fn C.get_item_func(&C.MIR_item_t) C.MIR_func_t

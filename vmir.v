@@ -1,7 +1,5 @@
 module vmir
 
-import os
-
 // data types, the same of MIR_type_t
 pub enum Type {
 	mir_i8
@@ -72,11 +70,7 @@ pub fn (c &Context) finish() {
 
 // outputs MIR textual representation to file
 pub fn (c &Context) output(path string) ? {
-	if !os.exists(path) {
-		mut file := os.create(path) or { panic(err) }
-		file.close()
-	}
-	cfile := os.vfopen(path, 'wb') or { panic(err) }
+	cfile := open_or_create_file(path)
 	C.MIR_output(c, cfile)
 }
 
@@ -87,7 +81,8 @@ pub fn (c &Context) scan_string(s string) {
 
 // outputs binary MIR representation to file
 pub fn (c &Context) write(path string) ? {
-	C.MIR_write(c, open_or_create_file(path))
+	cfile := open_or_create_file(path)
+	C.MIR_write(c, cfile)
 }
 
 // read binary MIR representation from file
@@ -96,7 +91,7 @@ pub fn (c &Context) read(path string) ? {
 	C.MIR_read(c, cfile)
 }
 
-// module
+// new module
 pub fn (c &Context) new_module(name string) Module {
 	return C.MIR_new_module(c, name.str)
 }
@@ -104,11 +99,6 @@ pub fn (c &Context) new_module(name string) Module {
 // module creation is finished, add endmodule
 pub fn (c &Context) finish_module() {
 	C.MIR_finish_module(c)
-}
-
-// list of all created modules can be gotten
-pub fn (c &Context) get_module_list() &C.DLIST_MIR_module_t {
-	return C.MIR_get_module_list(c)
 }
 
 // new import item
@@ -136,23 +126,23 @@ pub fn (c &Context) new_vararg_proto(name string, rets []Type, args []Var) Item 
 	return C.MIR_new_vararg_proto_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
-// new func
+// new function
 pub fn (c &Context) new_func(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_func_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
-// new vararg func,
+// new vararg function,
 pub fn (c &Context) new_vararg_func(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_vararg_func_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
-// new func local variable(reg)
+// new function local variable(reg)
 pub fn (c &Context) new_func_reg(func Item, typ Type, name string) Reg {
 	f := C.get_item_func(func)
 	return C.MIR_new_func_reg(c, f, typ, name.str)
 }
 
-// get func arg(reg)
+// get function arg(reg)
 pub fn (c &Context) reg(name string, func Item) Reg {
 	f := C.get_item_func(func)
 	return C.MIR_reg(c, name.str, f)
@@ -229,6 +219,7 @@ pub fn (c &Context) output_module(path string, mod Module) {
 
 //------------------------------------------------------------------------------------------------
 // operands
+// new literal op
 pub fn (c &Context) new_int_op(i i64) Op {
 	return C.MIR_new_int_op(c, i)
 }
@@ -291,6 +282,7 @@ pub fn (c &Context) new_op_arr(ops ...Op) []Op {
 
 //------------------------------------------------------------------------------------------------
 // insn
+// new insn
 pub fn (c &Context) new_insn(code Insn_code, ops []Op) Insn {
 	return C.MIR_new_insn_arr(c, code, ops.len, ops.data)
 }
@@ -348,17 +340,7 @@ pub fn (c &Context) output_insn(path string, insn Insn, func Item, newline_p int
 }
 
 //------------------------------------------------------------------------------------------------
-// other api
-// get the current error function
-pub fn (c &Context) get_error_func() &C.MIR_error_func_t {
-	return C.MIR_get_error_func(c)
-}
-
-// set up the current error function
-pub fn (c &Context) set_error_func(func &C.MIR_error_func_t) {
-	C.MIR_set_error_func(c, func)
-}
-
+// interpret
 // load module
 pub fn (c &Context) load_module(mod Module) {
 	C.MIR_load_module(c, mod)
@@ -374,9 +356,6 @@ pub fn (c &Context) load_external(name string, addr voidptr) {
 pub fn (c &Context) link() {
 	C.MIR_link(c, C.MIR_set_interp_interface, C.NULL)
 }
-
-//------------------------------------------------------------------------------------------------
-// interpret
 
 // new val array
 pub fn (c &Context) new_val_arr(vals ...Val) []Val {
@@ -445,4 +424,16 @@ pub fn (c &Context) set_parallel_gen_interface(func_item Item) {
 
 pub fn (c &Context) set_lazy_gen_interface(func_item Item) {
 	C.MIR_set_lazy_gen_interface(c, func_item)
+}
+
+//------------------------------------------------------------------------------------------------
+// other api
+// get the current error function
+pub fn (c &Context) get_error_func() &C.MIR_error_func_t {
+	return C.MIR_get_error_func(c)
+}
+
+// set up the current error function
+pub fn (c &Context) set_error_func(func &C.MIR_error_func_t) {
+	C.MIR_set_error_func(c, func)
 }
