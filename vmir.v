@@ -485,17 +485,3 @@ pub fn (c &Context) set_parallel_gen_interface(func_item Item) {
 pub fn (c &Context) set_lazy_gen_interface(func_item Item) {
 	C.MIR_set_lazy_gen_interface(c, func_item)
 }
-
-//------------------------------------------------------------------------------------------------
-// other api
-// get the current error function
-[inline]
-pub fn (c &Context) get_error_func() &C.MIR_error_func_t {
-	return C.MIR_get_error_func(c)
-}
-
-// set up the current error function
-[inline]
-pub fn (c &Context) set_error_func(func &C.MIR_error_func_t) {
-	C.MIR_set_error_func(c, func)
-}

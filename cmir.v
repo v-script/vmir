@@ -320,12 +320,3 @@ pub fn C.MIR_set_gen_interface(&C.MIR_context_t, &C.MIR_item_t)
 pub fn C.MIR_set_parallel_gen_interface(&C.MIR_context_t, &C.MIR_item_t)
 
 pub fn C.MIR_set_lazy_gen_interface(&C.MIR_context_t, &C.MIR_item_t)
-
-//------------------------------------------------------------------------------------------------
-// other
-// get the current error function
-pub fn C.MIR_get_error_func(&C.MIR_context_t) &C.MIR_error_func_t
-
-// set up the current error function
-pub fn C.MIR_set_error_func(&C.MIR_context_t, &C.MIR_error_func_t)
-
