@@ -37,10 +37,11 @@ pub struct C.MIR_item_t {
 
 pub struct C.MIR_item {}
 
-// func
+// function
 [typedef]
 pub struct C.MIR_func_t {}
 
+//prototype
 pub struct C.MIR_proto {}
 
 [typedef]
@@ -183,6 +184,12 @@ pub fn C.MIR_new_vararg_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, in
 // new function local variable(reg)
 pub fn C.MIR_new_func_reg(&C.MIR_context_t, &C.MIR_func_t, Type, &byte) C.MIR_reg_t
 
+// get function argument
+pub fn C.MIR_reg(&C.MIR_context_t, &byte, &C.MIR_func_t) C.MIR_reg_t
+
+// get MIR_item_t function in union: item->u.function
+pub fn C.MIR_get_item_func(&C.MIR_context_t, &C.MIR_item_t) C.MIR_func_t
+
 // function creation is finished, add endfunc
 pub fn C.MIR_finish_func(&C.MIR_context_t)
 
@@ -207,6 +214,7 @@ pub fn C.MIR_output_item(&C.MIR_context_t, &C.FILE, &C.MIR_item_t)
 // output module
 pub fn C.MIR_output_module(&C.MIR_context_t, &C.FILE, &C.MIR_module_t)
 
+//------------------------------------------------------------------------------------------------
 // new insn with op array
 pub fn C.MIR_new_insn_arr(&C.MIR_context_t, Insn_code, int, &C.MIR_op_t) C.MIR_insn_t
 
@@ -233,9 +241,6 @@ pub fn C.MIR_output_insn(&C.MIR_context_t, &C.FILE, &C.MIR_insn_t, &C.MIR_func_t
 
 // new label
 pub fn C.MIR_new_label(&C.MIR_context_t) C.MIR_insn_t
-
-// get func arg
-pub fn C.MIR_reg(&C.MIR_context_t, &byte, &C.MIR_func_t) C.MIR_reg_t
 
 //------------------------------------------------------------------------------------------------
 // op
@@ -324,5 +329,3 @@ pub fn C.MIR_get_error_func(&C.MIR_context_t) &C.MIR_error_func_t
 // set up the current error function
 pub fn C.MIR_set_error_func(&C.MIR_context_t, &C.MIR_error_func_t)
 
-// get MIR_item_t func in union: item->u.func
-pub fn C.MIR_get_item_func(&C.MIR_context_t, &C.MIR_item_t) C.MIR_func_t

@@ -4,3 +4,5 @@
 /c/*.o
 /c/*.a
 .DS_Store
+m.mir
+m.bmir
