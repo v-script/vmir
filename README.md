@@ -103,3 +103,7 @@ hello world
 main_fn returns: 6
 done
 ```
+
+### size of MIR
+
+The size of binary file will increase about 430K, after import vmir module and build with `v -prod`.
