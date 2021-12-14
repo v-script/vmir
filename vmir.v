@@ -131,7 +131,7 @@ pub fn (c &Context) new_proto(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_proto_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
-// new vararg prototype, the only difference is that two or more prototype argument names can be the same
+// new prototype which require at least one argument
 pub fn (c &Context) new_vararg_proto(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_vararg_proto_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
@@ -141,7 +141,7 @@ pub fn (c &Context) new_func(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_func_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
-// new vararg function,
+//new function which require at least one argument
 pub fn (c &Context) new_vararg_func(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_vararg_func_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }

@@ -171,14 +171,16 @@ pub fn C.MIR_new_forward(&C.MIR_context_t, &byte) C.MIR_item_t
 // new prototype
 pub fn C.MIR_new_proto_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) C.MIR_item_t
 
-pub fn C.MIR_new_vararg_proto_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, C.MIR_var_t) Item
+// new prototype which require at least one argument
+pub fn C.MIR_new_vararg_proto_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, C.MIR_var_t) C.MIR_item_t
 
-// new func arr
+// new function
 pub fn C.MIR_new_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) C.MIR_item_t
 
+//new function which require at least one argument
 pub fn C.MIR_new_vararg_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) C.MIR_item_t
 
-// new func local variable(reg)
+// new function local variable(reg)
 pub fn C.MIR_new_func_reg(&C.MIR_context_t, &C.MIR_func_t, Type, &byte) C.MIR_reg_t
 
 // function creation is finished, add endfunc
