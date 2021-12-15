@@ -19,11 +19,11 @@ pub struct C.c2mir_options {
 
 	// module_num int
 	// prepro_output_file &C.FILE
-	// output_file_name   &byte = ''.str
+	output_file_name   &byte
 	// macro_commands_num int
-	// include_dirs_num   int
+	include_dirs_num   int
 	// macro_commands     &C.c2mir_macro_command
-	// include_dirs &byte = ''.str
+	include_dirs []string //compiler as options -I
 }
 
 pub struct C.c2mir_macro_command {
