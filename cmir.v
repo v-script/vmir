@@ -50,16 +50,17 @@ pub struct C.MIR_proto_t {}
 [typedef]
 pub struct C.MIR_label_t {}
 
+// name
 [typedef]
 pub struct C.MIR_name_t {}
 
+// variable
 pub struct C.MIR_var {
 	@type Type
 	name  &byte
 	size  int
 }
 
-// variable
 [typedef]
 pub struct C.MIR_var_t {}
 
