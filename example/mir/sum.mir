@@ -1,0 +1,25 @@
+m:  module
+
+import printf
+
+main_p: proto
+printf_p: proto u64:arg, ...
+sum_p: proto i64, i64:a, i64:b
+
+# sum
+sum: func i64, i64:a, i64:b
+    local i64:s
+    add s, a, b
+    ret s
+    endfunc
+    export add
+
+main: func
+    local i64:s, i64:x, i64:y
+    mov x, 2
+    mov y, 3
+    call sum_p, sum, s, x, y
+    call printf_p, printf, "%d+%d=%d\n", x, y, s
+    endfunc
+    export main
+    endmodule
