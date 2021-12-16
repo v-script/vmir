@@ -395,7 +395,7 @@ pub fn (c &Context) output_insn(path string, insn Insn, func Item, newline_p int
 // get insn name
 [inline]
 pub fn (c &Context) insn_name(code Insn_code) string {
-	return C.MIR_insn_name(c, code).str()
+	return tos2(C.MIR_insn_name(c, code))
 }
 
 // get num of op
