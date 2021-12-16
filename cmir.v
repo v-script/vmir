@@ -252,6 +252,12 @@ pub fn C.MIR_output_insn(&C.MIR_context_t, &C.FILE, &C.MIR_insn_t, &C.MIR_func_t
 // new label
 pub fn C.MIR_new_label(&C.MIR_context_t) C.MIR_insn_t
 
+// get insn name
+pub fn C.MIR_insn_name(&C.MIR_context_t, Insn_code) &byte
+
+// get num of op
+pub fn C.MIR_insn_nops(&C.MIR_context_t, &C.MIR_insn_t) int
+
 //------------------------------------------------------------------------------------------------
 // op
 // new literal op

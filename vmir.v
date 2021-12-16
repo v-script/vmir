@@ -20,7 +20,6 @@ pub enum Type {
 	// mir_bound
 }
 
-[heap]
 pub type Context = C.MIR_context_t
 
 pub type Module = C.MIR_module_t
@@ -91,7 +90,7 @@ pub fn (c &Context) write(path string) ? {
 // read binary MIR representation from file
 [inline]
 pub fn (c &Context) read(path string) ? {
-	C.MIR_read(c, get_file(path)?)
+	C.MIR_read(c, get_file(path) ?)
 }
 
 // write binary MIR representation through a function given as an argument
@@ -154,7 +153,7 @@ pub fn (c &Context) new_func(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_func_arr(c, name.str, rets.len, rets.data, args.len, args.data)
 }
 
-//new function which require at least one argument
+// new function which require at least one argument
 [inline]
 pub fn (c &Context) new_vararg_func(name string, rets []Type, args []Var) Item {
 	return C.MIR_new_vararg_func_arr(c, name.str, rets.len, rets.data, args.len, args.data)
@@ -166,7 +165,7 @@ pub fn (c &Context) new_func_reg(func Item, typ Type, name string) Reg {
 	return C.MIR_new_func_reg(c, c.get_item_func(func), typ, name.str)
 }
 
-// get function arg(reg)
+// get function argument and local variable(reg)
 [inline]
 pub fn (c &Context) reg(name string, func Item) Reg {
 	return C.MIR_reg(c, name.str, c.get_item_func(func))
@@ -260,18 +259,22 @@ pub fn (c &Context) output_module(path string, mod Module) {
 pub fn (c &Context) new_int_op(i i64) Op {
 	return C.MIR_new_int_op(c, i)
 }
+
 [inline]
 pub fn (c &Context) new_uint_op(u u64) Op {
 	return C.MIR_new_uint_op(c, u)
 }
+
 [inline]
 pub fn (c &Context) new_float_op(f f32) Op {
 	return C.MIR_new_float_op(c, f)
 }
+
 [inline]
 pub fn (c &Context) new_double_op(d f64) Op {
 	return C.MIR_new_double_op(c, d)
 }
+
 [inline]
 pub fn (c &Context) new_ldouble_op(d f64) Op {
 	return C.MIR_new_ldouble_op(c, d)
@@ -389,6 +392,18 @@ pub fn (c &Context) output_insn(path string, insn Insn, func Item, newline_p int
 	C.MIR_output_insn(c, open_or_create_file(path), insn, c.get_item_func(func), newline_p)
 }
 
+// get insn name
+[inline]
+pub fn (c &Context) insn_name(code Insn_code) string {
+	return C.MIR_insn_name(c, code).str()
+}
+
+// get num of op
+[inline]
+pub fn (c &Context) insn_nops(insn Insn) int {
+	return C.MIR_insn_nops(c, insn)
+}
+
 //------------------------------------------------------------------------------------------------
 // interpret
 // load module
@@ -473,14 +488,17 @@ pub fn (c &Context) gen_set_debug_level(gen_num int, debug_level int) {
 pub fn (c &Context) gen_set_optimize_level(gen_num int, level u32) {
 	C.MIR_gen_set_optimize_level(c, gen_num, level)
 }
+
 [inline]
 pub fn (c &Context) set_gen_interface(func_item Item) {
 	C.MIR_set_gen_interface(c, func_item)
 }
+
 [inline]
 pub fn (c &Context) set_parallel_gen_interface(func_item Item) {
 	C.MIR_set_parallel_gen_interface(c, func_item)
 }
+
 [inline]
 pub fn (c &Context) set_lazy_gen_interface(func_item Item) {
 	C.MIR_set_lazy_gen_interface(c, func_item)
