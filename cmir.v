@@ -12,15 +12,14 @@ pub struct C.MIR_context_t {}
 pub struct C.MIR_module_t {}
 
 // module item
-
-// pub struct C.MIR_item_t {}
+[typedef]
+pub struct C.MIR_item_t {}
 
 // V do not support anonymous union int C.MIR_item_t yet.
-[typedef]
-pub struct C.MIR_item_t {
-	// pub mut:
-	// 	u Un
-}
+// pub struct C.MIR_item_t {
+// 	// pub mut:
+// 	// 	u Un
+// }
 
 // pub union Un {
 // pub mut:
@@ -41,13 +40,13 @@ pub struct C.MIR_item {}
 [typedef]
 pub struct C.MIR_func_t {}
 
-//prototype
+// prototype
 pub struct C.MIR_proto {}
 
 [typedef]
 pub struct C.MIR_proto_t {}
 
-// module label
+// label
 [typedef]
 pub struct C.MIR_label_t {}
 
@@ -60,9 +59,11 @@ pub struct C.MIR_var {
 	size  int
 }
 
+// variable
 [typedef]
 pub struct C.MIR_var_t {}
 
+// string type
 pub struct C.MIR_str {
 	len int
 	s   &byte
@@ -71,49 +72,57 @@ pub struct C.MIR_str {
 [typedef]
 pub struct C.MIR_str_t {}
 
+// instruction
+[typedef]
+pub struct C.MIR_insn_t {}
+
 pub struct C.MIR_insn {
 	data voidptr
 	code int
 	nops int
 }
 
+// data
 pub struct C.MIR_data {}
 
 [typedef]
 pub struct C.MIR_data_t {}
 
+// reference data
 pub struct C.MIR_ref_data {}
 
 [typedef]
 pub struct C.MIR_ref_data_t {}
 
+// exprence data
 pub struct C.MIR_expr_data {}
 
 [typedef]
 pub struct C.MIR_expr_data_t {}
 
+// memory block data
 pub struct C.MIR_bss {}
 
 [typedef]
 pub struct C.MIR_bss_t {}
 
-// insn
-[typedef]
-pub struct C.MIR_insn_t {}
-
-// op
+// operand
 [typedef]
 pub struct C.MIR_op_t {}
 
+// local variable operand
 [typedef]
 pub struct C.MIR_reg_t {}
 
+// address displacement in memory
 [typedef]
 pub struct C.MIR_disp_t {}
 
+// index reg scale in memory
 [typedef]
 pub struct C.MIR_scale_t {}
 
+// value of argument, used for interpret function
 [typedef]
 pub union C.MIR_val_t {
 pub mut:
@@ -178,7 +187,7 @@ pub fn C.MIR_new_vararg_proto_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, i
 // new function
 pub fn C.MIR_new_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) C.MIR_item_t
 
-//new function which require at least one argument
+// new function which require at least one argument
 pub fn C.MIR_new_vararg_func_arr(&C.MIR_context_t, &byte, int, &C.MIR_type_t, int, &C.MIR_var_t) C.MIR_item_t
 
 // new function local variable(reg)
