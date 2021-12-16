@@ -1,6 +1,6 @@
 module vmir
 
-// data types, the same of MIR_type_t
+// data types, the same as MIR_type_t
 pub enum Type {
 	mir_i8
 	mir_u8
