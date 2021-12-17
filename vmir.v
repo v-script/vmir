@@ -117,6 +117,12 @@ pub fn (c &Context) finish_module() {
 	C.MIR_finish_module(c)
 }
 
+// get module list
+[inline]
+pub fn (c &Context) get_module_list() &C.DLIST_MIR_module_t {
+	return C.MIR_get_module_list(c)
+}
+
 // new import item
 [inline]
 pub fn (c &Context) new_import(name string) Item {

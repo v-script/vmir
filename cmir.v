@@ -5,11 +5,16 @@ module vmir
 #include "mir-gen.h"
 
 // context
+[typedef]
+pub struct C.MIR_context {}
+[typedef]
 pub struct C.MIR_context_t {}
 
 // module
 [typedef]
 pub struct C.MIR_module_t {}
+
+pub struct C.DLIST_MIR_module_t {}
 
 // module item
 [typedef]
@@ -34,11 +39,15 @@ pub struct C.MIR_item_t {}
 // 	bss        C.MIR_bss_t
 // }
 
-pub struct C.MIR_item {}
+[typedef]
+pub struct C.MIR_item {
+	@module C.MIR_module_t
+}
 
 // function
 [typedef]
-pub struct C.MIR_func_t {}
+pub struct C.MIR_func_t {
+}
 
 // prototype
 pub struct C.MIR_proto {}
@@ -168,7 +177,7 @@ pub fn C.MIR_new_module(&C.MIR_context_t, &byte) C.MIR_module_t
 pub fn C.MIR_finish_module(&C.MIR_context_t)
 
 // list of all created modules can be gotten
-pub fn C.MIR_get_module_list(&C.MIR_context_t) voidptr
+pub fn C.MIR_get_module_list(&C.MIR_context_t) &C.DLIST_MIR_module_t
 
 // new import item
 pub fn C.MIR_new_import(&C.MIR_context_t, &byte) C.MIR_item_t

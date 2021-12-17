@@ -3,6 +3,9 @@ module vmir
 import os
 
 pub fn open_or_create_file(path string) &C.FILE {
+	if path=='' {
+		return C.NULL
+	}
 	if !os.exists(path) {
 		mut file := os.create(path) or { panic(err) }
 		file.close()
