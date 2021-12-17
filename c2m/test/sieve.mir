@@ -1,0 +1,86 @@
+M0:	module
+proto0:	proto	i32, i32:i0_n
+proto1:	proto	u64:U0_fmt, ...
+proto2:	proto	
+	import	printf
+	import	abort
+sieve:	func	i32, i32:i0_n
+	local	i64:fp, i64:I0_iter, i64:I_0, i64:i_1, i64:I0_count, i64:I0_i, i64:i_2, i64:I_3
+	local	i64:I_4, i64:i_5, i64:i_6, i64:I0_prime, i64:I_7, i64:I0_k, i64:I_8, i64:i_9
+	local	i64:I_10, i64:I_11, i64:I_12, i64:i_13, i64:I_14, i64:I_15, i64:i_16, i64:I_17
+	local	i64:I_18, i64:i_19
+# 1 arg, 26 locals
+	alloca	fp, 8192
+	mov	I0_iter, 0
+	ext32	I_0, i0_n
+	bge	L3, I0_iter, I_0
+L1:
+	mov	I0_count, 0
+	mov	I0_i, 0
+	bge	L6, I0_i, 8190
+L4:
+	ext8	I_3, 1
+	mov	i8:(fp, I0_i), I_3
+L5:
+	mov	I_4, I0_i
+	add	I_4, I_4, 1
+	mov	I0_i, I_4
+	blt	L4, I0_i, 8190
+L6:
+	mov	I0_i, 2
+	bge	L9, I0_i, 8190
+L7:
+	bf	L11, i8:(fp, I0_i)
+L10:
+	add	I_7, I0_i, 1
+	mov	I0_prime, I_7
+	add	I_8, I0_i, I0_prime
+	mov	I0_k, I_8
+	bge	L15, I0_k, 8190
+L13:
+	ext8	I_10, 0
+	mov	i8:(fp, I0_k), I_10
+L14:
+	mov	I_11, I0_k
+	add	I_11, I_11, I0_prime
+	mov	I0_k, I_11
+	blt	L13, I0_k, 8190
+L15:
+	mov	I_14, I0_count
+	add	I_14, I_14, 1
+	mov	I0_count, I_14
+	jmp	L12
+L11:
+L12:
+L8:
+	mov	I_15, I0_i
+	add	I_15, I_15, 1
+	mov	I0_i, I_15
+	blt	L7, I0_i, 8190
+L9:
+L2:
+	mov	I_17, I0_iter
+	add	I_17, I_17, 1
+	mov	I0_iter, I_17
+	ext32	I_18, i0_n
+	blt	L1, I0_iter, I_18
+L3:
+	ret	I0_count
+	endfunc
+	export	sieve
+main:	func	i32
+	local	i64:i0_n, i64:i_0, i64:i_1
+# 0 args, 3 locals
+	call	proto0, sieve, i_0, 1000
+	mov	i0_n, i_0
+	call	proto1, printf, "%d iterations of sieve for %d: result = %d\n\000", 1000, 8190, i0_n
+	beqs	L17, i0_n, 1027
+L16:
+	call	proto2, abort
+	jmp	L18
+L17:
+L18:
+	ret	0
+	endfunc
+	export	main
+	endmodule
