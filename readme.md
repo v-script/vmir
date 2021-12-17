@@ -4,7 +4,7 @@
 ### Installing MIR
 
 ```shell
-git clone git@github.com:v-script/mir.git
+git clone https://github.com/vnmakarov/mir.git
 make
 make install
 ```
