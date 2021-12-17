@@ -104,6 +104,32 @@ main_fn returns: 6
 done
 ```
 
+### Usage of c2m
+
+generate C file to MIR:
+
+```v
+module main
+
+import vmir
+import vmir.c2m
+
+fn main() {
+	c := vmir.new_context()
+	c2m.init(c)
+	options := c2m.Options{
+		asm_p: 1 //-S, generate MIR text representation
+		// object_p: 1  //-c, generate MIR binary
+	}
+	result := c2m.compile(c, &options, './c2m/test/sieve.c', './c2m/test/sieve.mir')
+	println('result is: $result')
+	c2m.finish(c)
+	c.finish()
+	println('done')
+}
+
+```
+
 ### size of MIR
 
 The size of binary file will increase about 430K, after import vmir module and build with `v -prod`.
