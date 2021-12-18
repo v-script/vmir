@@ -8,7 +8,7 @@
 
 **M**edium **I**nternal **R**epresentation 中级别的内部表示
 
-中级别应该是相对于LLVM中的low level低级别，低级别的虚拟机
+中级别应该是相对于LLVM中的low level低级别的虚拟机
 
 ### 定位
 
@@ -36,7 +36,7 @@ A lightweight JIT compiler project 轻量级的JIT解释器/编译器项目
 
 ### 现在
 
-已有的架构对vs来说，已经够了，如果更成熟一些就可以考虑使用。
+已有的架构来说，已经够了，如果更成熟一些就可以考虑使用。
 
 ![Current MIR](mir.assets/mir3.svg)
 
@@ -134,9 +134,13 @@ make bench
 目前就是语法高亮。
 
 名称: [VSCode MIR](https://marketplace.visualstudio.com/items?itemName=eliphatfs0.vscode-mir)
+
 ID: eliphatfs0.vscode-mir
+
 说明: Support for MIR textual format.
+
 版本: 0.0.1
+
 发布者: Flandre Scarlet
 
 ### c2m
