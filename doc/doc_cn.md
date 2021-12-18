@@ -10,10 +10,6 @@
 
 中级别应该是相对于LLVM中的low level低级别，低级别的虚拟机
 
-作者Vladimir Makarov，俄罗斯人，红帽的开发人员， 在给 Ruby 语言添加 JIT 功能的延伸项目
-
-MIR means "peace" and "world" in Russian
-
 ### 定位
 
 A lightweight JIT compiler project 轻量级的JIT解释器/编译器项目
