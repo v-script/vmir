@@ -65,6 +65,7 @@ pub struct C.MIR_name_t {}
 
 // variable
 pub struct C.MIR_var {
+pub mut:
 	@type Type
 	name  &byte
 	size  int
@@ -75,6 +76,7 @@ pub struct C.MIR_var_t {}
 
 // string type
 pub struct C.MIR_str {
+pub mut:
 	len int
 	s   &byte
 }
@@ -87,6 +89,7 @@ pub struct C.MIR_str_t {}
 pub struct C.MIR_insn_t {}
 
 pub struct C.MIR_insn {
+pub mut:
 	data voidptr
 	code int
 	nops int
