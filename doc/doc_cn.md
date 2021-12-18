@@ -80,7 +80,7 @@ mir生成机器码过程：
 - QBE (一种吸取少女能量的宇宙生物) 号称使用 10% 的代码达到 LLVM 90% 的速度，但终究是爱好者作品，人要吃饭，没有维护。
 - libFirm 集成了很多（学术上的）优化手段，但用起来还是没那么方便，由于不是对 JIT 特定，还需要用户自己把汇编转换成机器码，编译的成本比较高。
 
-而 MIR 和它们的区别是，在保持轻量同时，完成了很多主要的优化：
+​	而 MIR 和它们的区别是，在保持轻量同时，完成了很多主要的优化：
 
 - SSA: static single assignment，众所周知 Static Single Assignment Book 已经成为编译器新约。但是不用 SSA 表示也能做不少优化。
 - Inlining: 内联，也就是把代码撸顺了好执行
@@ -93,11 +93,11 @@ mir生成机器码过程：
 
 ### 安装
 
-代码库下载：
+#### 代码库下载
 
 git clone https://github.com/vnmakarov/mir.git
 
-编译及安装：
+#### 编译及安装
 
 ```shell
 make
@@ -129,17 +129,15 @@ make bench
 	b2ctab
 ```
 
-vscode插件:
+#### vscode插件
 
-```json
-名称: VSCode MIR
+目前就是语法高亮。
+
+名称: [VSCode MIR](https://marketplace.visualstudio.com/items?itemName=eliphatfs0.vscode-mir)
 ID: eliphatfs0.vscode-mir
 说明: Support for MIR textual format.
 版本: 0.0.1
 发布者: Flandre Scarlet
-VS Marketplace 
-链接: https://marketplace.visualstudio.com/items?itemName=eliphatfs0.vscode-mir
-```
 
 ### c2m
 
@@ -240,7 +238,7 @@ int c2mir_compile (MIR_context_t ctx, struct c2mir_options *ops, int (*getc_func
 
 ### 语法
 
-####特点
+#### 特点
 
 - 强类型
 - 类似汇编语言的语法，每一个指令或语句都要单独一行
