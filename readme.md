@@ -130,9 +130,9 @@ fn main() {
 
 ```
 
-### size of MIR
+### Size of MIR
 
-| module | increase size | compile option |
-| ------ | ------------- | -------------- |
-| vmir   | 430K          | v -prod        |
-| c2m    | 370K          | v -prod        |
+| module | increased size | compile option |
+| ------ | -------------- | -------------- |
+| vmir   | 430K           | v -prod        |
+| c2m    | 370K           | v -prod        |
