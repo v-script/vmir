@@ -12,7 +12,7 @@
 
 ### 定位
 
-A lightweight JIT compiler project 轻量级的JIT解释器/编译器项目
+A lightweight JIT compiler project 轻量级的JIT解释器/编译器项目。
 
 ### 特点
 
@@ -22,7 +22,7 @@ A lightweight JIT compiler project 轻量级的JIT解释器/编译器项目
 - 语法设计得很简洁，漂亮，类汇编风格，看着比llvm IR的舒服许多
 - 中间表示是MIR，不是SSA，也不是llvm IR
 - 生成机器码machine code，不是汇编
-- 支持多个架构,x86/64,arm,risc
+- 支持多个架构,x86,arm,risc
 - MIT开源协议
 - 可看做是一种独立于特定机器的通用汇编语言
 
@@ -33,10 +33,11 @@ A lightweight JIT compiler project 轻量级的JIT解释器/编译器项目
 - 它还可以和 LLVM 中间表示、WebAssembly 互转……
 - 它支持对 JIT 语言的特化编译模式：lazy compile，interpret top -> compile function
 - 它可以指定不同的优化 level，均衡编译和执行性能
+- 现在的缺点：目前只支持64位，32位的支持预计是2022年
 
 ### 现在
 
-已有的架构来说，已经够了，如果更成熟一些就可以考虑使用。
+现有的架构，已经够用了，如果更成熟一些就可以考虑使用。
 
 ![Current MIR](mir.assets/mir3.svg)
 
@@ -180,11 +181,13 @@ c2m main.c  #默认生成a.bmir二进制格式
 具体示例：
 
 ```shell
+#编译
 c2m sieve.c -E -o s.c
 c2m sieve.c -S    
 c2m sieve.c -S -o s.mir
 c2m sieve.c -c
 c2m sieve.c -c -o s.bmir
+#运行
 c2m sieve.c -ei
 c2m sieve.c -eg
 c2m sieve.c -el
@@ -220,25 +223,13 @@ int c2mir_compile (MIR_context_t ctx, struct c2mir_options *ops, int (*getc_func
 
 将文本格式转换为二进制格式
 
-```shell
-
-```
-
 ### b2m
 
 将二进制格式转换为文本格式
 
-```shell
-
-```
-
 ### b2ctab
 
 将二进制格式转换为C代码
-
-```shell
-
-```
 
 ### 语法
 
@@ -340,41 +331,24 @@ fin:
 - 模块组成程序
 
 - 模块由项item组成，项有这9种类型
-  1. 函数 
+  1. 函数  MIR_func_item
   
-     MIR_func_item
+  2. 原型  MIR_proto_item
   
-  2. 原型
+  2. 导入  MIR_import_item
   
-     MIR_proto_item
+  3. 导出  MIR_export_item
   
-  2. 导入
+  4. 向前声明  MIR_forward_item
   
-     MIR_import_item
+  6. 数据  MIR_data_item
   
-  3. 导出
+  7. 引用数据  MIR_ref_data_item
   
-     MIR_export_item
+  8. 表达式数据  MIR_expr_data_item
   
-  4. 向前声明
+  9. 内存段数据  MIR_bss_item
   
-     MIR_forward_item
-  
-  6. 数据
-  
-     MIR_data_item
-  
-  7. 引用数据
-  
-     MIR_ref_data_item
-  
-  8. 表达式数据
-  
-     MIR_expr_data_item
-  
-  9. 内存段数据
-  
-     MIR_bss_item
 
 在一个模块中：函数，原型，导入的命名必须唯一。
 
@@ -502,8 +476,7 @@ call printf_p, printf, format, a, b, c
   rblk
   ```
 
-对应文本格式中：i8`,
-`u8`, `i16`, `u16`, `i32`, `u32`, `i64`, `u64`, `f`, `d`, `ld`, `p，blk，rblk
+对应文本格式：i8，u8，i16，u16，i32，u32，i64，u64，f，d，ld，p，blk，rblk
 
 ```c
 int MIR_int_type_p (MIR_type_t t) //如果是整数则返回TRUE,1
@@ -995,14 +968,14 @@ alloca	fp, 16
 
 #### 参数相关指令
 
-下面的指令只能用于函数参数
+下面的指令只能用于函数参数，主要用来支持C函数中的不确定个数参数，参考C标准库的<stdarg.h>。
 
-| 指令             | 参数个数 | 文本格式 | 描述 |
-| ---------------- | -------- | -------- | ---- |
-| MIR_VA_ARG       |          |          |      |
-| MIR_VA_BLOCK_ARG |          |          |      |
-| MIR_VA_START     | 1        |          |      |
-| MIR_VA_END       | 1        |          |      |
+| 指令             | 参数个数 | 文本格式     | 描述                                     |
+| ---------------- | -------- | ------------ | ---------------------------------------- |
+| MIR_VA_ARG       | 3        | va_arg       | 返回内存指针，2个参数：va_list和内存指针 |
+| MIR_VA_BLOCK_ARG | 3        | va_block_arg | 返回内存地址，2个参数：va_list和整数     |
+| MIR_VA_START     | 1        | va_start     | 参数是* va_list结构体指针                |
+| MIR_VA_END       | 1        | va_end       | 参数是* va_list结构体指针                |
 
 ### C集成
 
