@@ -1,0 +1,8 @@
+m:	module
+	import	printf
+p_printf:	proto	u64:arg,...
+main:	func	 
+	call	p_printf, printf, "hello world\n"
+	endfunc
+	export	main
+	endmodule

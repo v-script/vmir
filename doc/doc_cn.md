@@ -84,13 +84,24 @@ mir生成机器码过程：
 ​	而 MIR 和它们的区别是，在保持轻量同时，完成了很多主要的优化：
 
 - SSA: static single assignment，众所周知 Static Single Assignment Book 已经成为编译器新约。但是不用 SSA 表示也能做不少优化。
+
 - Inlining: 内联，也就是把代码撸顺了好执行
+
 - GCSE: 全局的公共子表达式消除
+
 - SCCP: 常量传播并移除控制流图中的死路径
+
 - RA: 可达性分析
+
 - CP: 赋值传播
+
 - DCE: 死代码消除
+
 - LA: 循环分析，可以提取循环不变量等
+
+  
+
+![](/Users/zhijiayou01/vs/vmir/doc/mir.assets/equation.svg)
 
 ### 安装
 
@@ -612,12 +623,17 @@ mov distination, source
 | MIR_DMOV  | 2        | dmov     | 复制双精度小数值   |
 | MIR_LDMOV | 2        | ldmov    | 复制长双精度小数值 |
 
+```assembly
+mov	U0_a, U_28
+mov	U0_b, 0
+```
+
 #### ext指令
 
-扩展，指令需要将其中的立即数进行符号扩展，或者无符号扩展，一般都是都是将n位立即数扩展为32位。
+扩展，指令将其中的数进行符号扩展，或者无符号扩展，一般都是都是将n位数扩展为32位。
 
 1. 无符号扩展：直接将扩展后的数据的高(32-n)位置为0。
-2. 符号扩展：将扩展后的数据的高(32-n)位置为立即数的最高位。
+2. 符号扩展：将扩展后的数据的高(32-n)位置为数的最高位。
 
 | 指令       | 参数个数 | 文本格式 | 描述       |
 | ---------- | -------- | -------- | ---------- |
@@ -628,17 +644,28 @@ mov distination, source
 | MIR_UEXT16 | 2        | uext16   |            |
 | MIR_UEXT32 | 2        | uext32   |            |
 
+```assembly
+uext8	I_0, 0
+ext32	I_7, i1__t1
+```
+
 #### neg指令
 
-改变符号
+取一个数的相反数，就是取反加1
 
 | 指令      | 参数个数 | 文本格式 | 描述                   |
 | --------- | -------- | -------- | ---------------------- |
-| MIR_NEG   | 2        | neg      | 改变64位整数的符号     |
-| MIR_NEGS  | 2        | negs     | 改变32位整数的符号     |
-| MIR_FNEG  | 2        | fneg     | 改变单精度小数的符号   |
-| MIR_DNEG  | 2        | dneg     | 改变双精度小数的符号   |
-| MIR_LDNEG | 2        | ldneg    | 改变长双精度小数的符号 |
+| MIR_NEG   | 2        | neg      | 取64位整数的相反数     |
+| MIR_NEGS  | 2        | negs     | 取32位整数的相反数     |
+| MIR_FNEG  | 2        | fneg     | 取单精度小数的相反数   |
+| MIR_DNEG  | 2        | dneg     | 取双精度小数的相反数   |
+| MIR_LDNEG | 2        | ldneg    | 取长双精度小数的相反数 |
+
+```assembly
+	local i64:a,i64:b
+	mov a, 77
+	neg b, a
+```
 
 #### add指令
 
@@ -652,6 +679,10 @@ mov distination, source
 | MIR_DADD  | 3        | dadd     | 双精度小数相加   |
 | MIR_LDADD | 3        | ldadd    | 长双精度小数相加 |
 
+```assembly
+add	I_12, fp, 80
+```
+
 #### sub指令
 
 减
@@ -664,6 +695,12 @@ mov distination, source
 | MIR_DSUB  | 3        | dsub     | 双精度小数相减   |
 | MRI_LDSUB | 3        | ldsub    | 长双精度小数相减 |
 
+```assembly
+subs	i_36, i4_j, 1
+fsub	f_144, f_142, f_143
+dsub	d_13, 1.00000000000000000000000000000000000000000000000000000e+00, d_12
+```
+
 #### mul指令
 
 乘
@@ -675,6 +712,11 @@ mov distination, source
 | MIR_FMUL  | 3        | fmul     | 单精度小数相乘   |
 | MIR_DMUL  | 3        | dmul     | 双精度描述相乘   |
 | MIR_LDMUL | 3        | ldmul    | 长双精度小数相乘 |
+
+```assembly
+muls	i_10, i2_bi, i0_slen
+mul	U_6, U_4, u64:(I_5)
+```
 
 #### div指令
 
@@ -690,6 +732,11 @@ mov distination, source
 | MIR_DDIV  | 3        | ddiv     | 双精度小数相除     |
 | MIR_LDDIV | 3        | lddir    | 长双精度小数相除   |
 
+```assembly
+udiv	U_8, U0_z, U_7
+udivs	u_42, u0_s2, u32:(I_41)
+```
+
 #### mod指令
 
 余
@@ -701,9 +748,14 @@ mov distination, source
 | MIR_UMOD  | 3        | umod     | 64位无符号整数相除取余数 |
 | MIR_UMODS | 3        | umods    | 32位无符号整数相除取余数 |
 
+```assembly
+umods	u_43, u0_out, 10
+mods	i_103, i0_exp, 10
+```
+
 #### logic指令
 
-按位且，或，异或
+位运算：按位且，或，异或
 
 | 指令     | 参数个数 | 文本格式 | 描述             |
 | -------- | -------- | -------- | ---------------- |
@@ -714,9 +766,17 @@ mov distination, source
 | MIR_XOR  | 3        | xor      | 64位整数按位异或 |
 | MIR_XORS | 3        | xors     | 32位整数按位异或 |
 
+```assembly
+and	U_14, U0_m2, 1
+or	U_7, U_3, U_6
+xor	U_90, U0_b, U0_seed
+```
+
 #### shift指令
 
 位移
+
+把整数，指定方向，移动几位
 
 | 指令      | 参数个数 | 文本格式 | 描述                                 |
 | --------- | -------- | -------- | ------------------------------------ |
@@ -727,9 +787,17 @@ mov distination, source
 | MIR_URSH  | 3        | ursh     | 64位无符号整数向右移位，带无符号扩展 |
 | MIR_URSHS | 3        | urshs    | 32位无符号整数向右移位，带无符号扩展 |
 
+```assembly
+lsh	U_3, U0_x, U0_s
+lshs	i_10, I_9, 8
+ursh	U_5, U0_x, U_4
+```
+
 #### eq指令
 
 相等
+
+比较2位数值是否相等，相等返回1，不相等返回0
 
 | 指令     | 参数个数 | 文本格式 | 描述                 |
 | -------- | -------- | -------- | -------------------- |
@@ -739,9 +807,15 @@ mov distination, source
 | MIR_DEQ  | 3        | deq      | 双精度小数是否相等   |
 | MIR_LDEQ | 3        | ldeq     | 长双精度小数是否相等 |
 
+```assembly
+eq	i_15, U_14, 0
+```
+
 #### ne指令
 
 不相等
+
+比较2位数值是否相等，不相等返回1，相等返回0
 
 | 指令     | 参数个数 | 文本格式 | 描述                   |
 | -------- | -------- | -------- | ---------------------- |
@@ -750,6 +824,10 @@ mov distination, source
 | MIR_FNE  | 3        | fne      | 单精度小数是否不相等   |
 | MIR_DNE  | 3        | dne      | 双精度小数是否不相等   |
 | MIR_LDNE | 3        | ldne     | 长双精度小数是否不相等 |
+
+```assembly
+ne	i_6, U_5, 0
+```
 
 #### lt指令
 
@@ -765,6 +843,10 @@ mov distination, source
 | MIR_DLT  | 3        | dlt      | 双精度小数比较是否小于     |
 | MIR_LDLT | 3        | ldlt     | 长双精度小数比较是否小于   |
 
+```assembly
+ult	i_12, U0_t, U0_rl
+```
+
 #### le指令
 
 小于等于
@@ -778,6 +860,10 @@ mov distination, source
 | MIR_FLE  | 3        | fle      | 单精度小数比较是否小于等于     |
 | MIR_DLE  | 3        | dle      | 双精度小数比较是否小于等于     |
 | MIR_LDLE | 3        | ldle     | 长双精度比较是否小于等于       |
+
+```assembly
+le a, 1, 2
+```
 
 #### gt指令
 
@@ -793,6 +879,10 @@ mov distination, source
 | MIR_DGT  | 3        | dgt      | 双精度比较是否大约         |
 | MIR_LDGT | 3        | ldgt     | 长双精度比较是否大于       |
 
+```assembly
+gt b, 1, 2
+```
+
 #### ge指令
 
 大于等于
@@ -806,6 +896,10 @@ mov distination, source
 | MIR_FGE  | 3        | fge      | 单精度小数比较是否大于等于     |
 | MIR_DGE  | 3        | dge      | 双精度比较是否大于等于         |
 | MIR_LDGE | 3        | ldge     | 长双精度比较是否大于等于       |
+
+```assembly
+ge a, 1, 2
+```
 
 #### 类型转换指令
 
@@ -823,6 +917,10 @@ mov distination, source
 | MIR_UI2D  | 2        | ui2d     | 64位无符号整数转换成双精度小数   |
 | MIR_UI2LD | 2        | ui2ld    | 64位无符号整数转换成长双精度小数 |
 
+```assembly
+i2d d, 3
+```
+
 ##### 小数转整数
 
 | 指令     | 参数个数 | 文本格式 | 描述                       |
@@ -830,6 +928,10 @@ mov distination, source
 | MIR_F2I  | 2        | f2i      | 单精度小数转换成64位整数   |
 | MIR_D2I  | 2        | d2i      | 双精度小数转换成64位整数   |
 | MIR_LD2I | 2        | ld2i     | 长双精度小数转换成64位整数 |
+
+```assembly
+d2i c, 2.12
+```
 
 ##### 小数转小数
 
@@ -841,6 +943,10 @@ mov distination, source
 | MIR_D2LD | 2        | d2ld     | 双精度转换成长双精度 |
 | MIR_LD2F | 2        | ld2f     | 长双精度转换成单精度 |
 | MIR_LD2D | 2        | ld2d     | 长双精度转换成双精度 |
+
+```assembly
+d2f a, 3.13234
+```
 
 #### branch指令
 
@@ -882,6 +988,10 @@ mov distination, source
 | MIR_UBGTS | 3        | ubgts    | 当前一个32位无符号整数大于后一个，跳转到标签     |
 | MIR_UBGES | 3        | ubges    | 当前一个32位无符号整数大于等于后一个，跳转到标签 |
 
+```assembly
+beq	L131, u64:8(U0_b), 0
+```
+
 ##### 小数比较跳转
 
 | 指令      | 参数个数 | 文本格式 | 描述                                           |
@@ -907,6 +1017,10 @@ mov distination, source
 | MIR_LDBGT | 3        | ldbgt    | 当前一个长双精度小数大于后一个，跳转到标签     |
 | MIR_LDBGE | 3        | ldbge    | 当前一个长双精度小数大于等于后一个，跳转到标签 |
 
+```assembly
+fbeq	L2431, f0_x, f_0
+```
+
 #### call指令
 
 调用函数
@@ -921,15 +1035,34 @@ mov distination, source
 
 剩下的：函数调用的参数
 
+```assembly
+call	proto9, array_push_many, U0_b, U0_ptr, i0_len
+```
+
 #### inline指令
 
-跟call指令类似，跟C的inline函数一样，把函数的调用层级缩短
+跟call指令类似，跟C的inline函数一样，把函数的调用层级缩短。
+
+指令格式就跟调用函数原型一样：
+
+```assembly
+inline	proto1, __darwin_check_fd_set, i_0, i0__fd, U_1
+```
 
 #### switch指令
 
 分支指令，类似match多分支语句
 
 MIR_SWITCH
+
+- 第一个参数是0至N-1的整数值
+- 剩下的是N个参数，N>0
+- 根据第一个参数的值，返回后面参数中的第N-1个
+- 如果第一个参数超过N-1，则返回undefined
+
+```assembly
+switch	I_198, L4097, L4098, L4097, L4097, L4097, L4097
+```
 
 #### ret指令
 
@@ -941,23 +1074,35 @@ MIR_RET
 
 返回指令要跟函数的签名一样
 
-
+```assembly
+ret	I_2, I_3
+```
 
 #### alloca指令
 
 在函数栈上分配内存区域，分配的只能是函数内的局部变量。
 
-参数1：内存地址
+参数1：内存地址，起始指针
 
-参数2：内存大小
+参数2：内存大小，以字节为单位
+
+然后就可以开始对这个fp的内存区域进行读写
 
 ```assembly
-alloca	fp, 16
+alloca	fp, 16 #分配内存区域，fp为起始指针
+mov	i32:(fp), 1	#开始写入值，写入i32，4个字节
+mov	i32:4(fp), 2 #偏移4个字节，继续写入i32,4个字节
 ```
 
 #### label指令
 
 跳转标签
+
+```assembly
+		jmp	L123
+L122:
+L123:
+```
 
 #### block指令
 
@@ -999,8 +1144,6 @@ main: func
     endfunc
     endmodule
 ```
-
-
 
 ### 代码执行
 
