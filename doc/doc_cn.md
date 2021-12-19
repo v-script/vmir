@@ -62,24 +62,25 @@ mir生成机器码过程：
 
 ### 竞争项目
 
-- llvm
+- [llvm](https://llvm.org/docs/ORCv2.html)
 
-  https://llvm.org/docs/ORCv2.html
+- [gcc](https://gcc.gnu.org/onlinedocs/jit/)
 
-- gcc
+- [QBE](https://c9x.me/compile/)
 
-  https://gcc.gnu.org/onlinedocs/jit/
+- [LIBJIT](https://www.gnu.org/software/libjit/)
 
-- Xbyak
+- [**RyuJIT**](https://github.com/dotnet/coreclr/blob/master/Documentation/botr/ryujit-overview.md)
 
-  https://github.com/herumi/xbyak		
+  
 
-​		C++开发，输出汇编，只支持x86/64
+- [libFirm](https://github.com/libfirm/libfirm)
 
-​		跨架构 JIT 又有点区别：由于跨架构，一般只做各架构通用的指令，为了兼容		各种指令集，一般会设计自己的高级中间表示，在中间表示的基础上做一些优		化。
+- [CraneLift](https://github.com/CraneStation/cranelift)
 
-- QBE (一种吸取少女能量的宇宙生物) 号称使用 10% 的代码达到 LLVM 90% 的速度，但终究是爱好者作品，人要吃饭，没有维护。
-- libFirm 集成了很多（学术上的）优化手段，但用起来还是没那么方便，由于不是对 JIT 特定，还需要用户自己把汇编转换成机器码，编译的成本比较高。
+- [NanoJIT](https://github.com/dibyendumajumdar/nanojit)
+
+- [Xbyak](https://github.com/herumi/xbyak)
 
 ​	而 MIR 和它们的区别是，在保持轻量同时，完成了很多主要的优化：
 
